@@ -1,0 +1,16 @@
+{{- /* Боковая навигация по разделу: ссылка на раздел и его подстраницы (как на сайтах MIT) */ -}}
+{{- $page := . -}}
+{{- $section := cond $page.IsSection $page $page.CurrentSection -}}
+{{- if and $section (not $section.IsHome) }}
+  {{- $children := $section.Pages.ByWeight -}}
+  {{- if $children }}
+  <nav class="sticky top-32 border-l-4 border-accent bg-white p-6 shadow-sm" aria-label="{{ $section.LinkTitle }}">
+    <a href="{{ $section.RelPermalink }}" class="font-serif text-xl {{ if eq $section $page }}text-accent{{ else }}text-brand hover:text-accent{{ end }}">{{ $section.LinkTitle }}</a>
+    <ul class="mt-4 space-y-1">
+      {{- range $children }}
+        <li><a href="{{ .RelPermalink }}" {{ if eq . $page }}aria-current="page"{{ end }} class="block py-1.5 text-[15px] transition-colors {{ if eq . $page }}font-semibold text-accent{{ else }}text-neutral-600 hover:translate-x-1 hover:text-brand{{ end }}">{{ .LinkTitle }}</a></li>
+      {{- end }}
+    </ul>
+  </nav>
+  {{- end }}
+{{- end }}

@@ -1,0 +1,80 @@
+{{- /*
+  Базовый шаблон сайта. Основан на themes/ananke/layouts/baseof.html:
+  сохранены meta-теги, opengraph/schema/twitter, RSS, хуки темы (hook.html).
+  Шапка и подвал — собственные partials на Tailwind (header.html, footer.html).
+
+  Блоки, которые могут переопределять шаблоны страниц:
+    "title", "head", "header" (по умолчанию page-hero), "main", "footer".
+*/ -}}
+{{- $anim := site.Params.animations -}}
+{{- $animOn := and $anim.enable (ne .Params.animations false) -}}
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale }}" {{- if eq site.Language.Direction "rtl" }} dir="rtl"{{ end }}
+  class="{{ if $animOn }}js-anim{{ end }}"
+  data-animations="{{ $animOn }}"
+  data-reveal="{{ $anim.reveal }}"
+  data-hide-header="{{ $anim.hideHeaderOnScroll }}"
+  data-hero-interval="{{ $anim.heroInterval | default 0 }}"
+  data-counters="{{ $anim.counters }}">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ block "title" . }}{{ if not .IsHome }}{{ .Title }} | {{ end }}{{ site.Title }}{{ end }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary | plainify | truncate 160 }}{{ else }}{{ site.Params.description }}{{ end }}{{ end }}">
+    {{ hugo.Generator }}
+    {{ if and hugo.IsProduction (not .Params.private) }}
+      <meta name="robots" content="index, follow">
+    {{ else }}
+      <meta name="robots" content="noindex, nofollow">
+    {{ end }}
+    {{- with .Params.author | default site.Params.author }}
+      <meta name="author" content="{{ if reflect.IsSlice . }}{{ delimit . ", " }}{{ else }}{{ . }}{{ end }}">
+    {{- end }}
+
+    {{- /* Альтернативные языковые версии страницы для поисковиков */}}
+    {{- range .AllTranslations }}
+      <link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
+    {{- end }}
+
+    {{ partials.Include "site-style.html" . }}
+    {{ partials.Include "site-scripts.html" . }}
+    {{- if not $anim.viewTransitions }}<style>@view-transition { navigation: none; }</style>{{ end }}
+
+    {{ block "favicon" . }}{{ partials.IncludeCached "site-favicon.html" . }}{{ end }}
+
+    {{ with .OutputFormats.Get "RSS" }}
+      <link href="{{ .RelPermalink }}" rel="alternate" type="application/rss+xml" title="{{ site.Title }}">
+    {{ end }}
+    <link rel="canonical" href="{{ .Params.canonicalUrl | default .Permalink }}">
+
+    {{ partial "opengraph.html" . -}}
+    {{ partial "schema.html" . -}}
+    {{ partial "twitter_cards.html" . -}}
+    {{ if hugo.IsProduction }}{{ partial "google_analytics.html" . }}{{ end }}
+    {{ block "head" . }}{{ partials.Include "head-additions.html" . }}{{ end }}
+  </head>
+
+  {{- $body := slice "min-h-screen" "flex" "flex-col" (printf "is-%s" .Kind) -}}
+  {{- with .Section }}{{ $body = $body | append (printf "section-%s" .) }}{{ end -}}
+  {{- with .File }}{{ $body = $body | append (printf "page-%s" .ContentBaseName) }}{{ end }}
+  <body class="{{ delimit $body " " }}">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-brand">{{ i18n "skipToContent" }}</a>
+    {{- partials.Include "hook.html" (dict "hook" "body-start" "context" .) -}}
+    {{ partials.Include "header.html" . }}
+    {{- partials.Include "hook.html" (dict "hook" "header-before" "context" .) -}}
+    {{ block "header" . }}{{ partials.Include "page-hero.html" . }}{{ end }}
+    {{- partials.Include "hook.html" (dict "hook" "header-after" "context" .) -}}
+    <main id="main" class="flex-1" role="main">
+      {{- partials.Include "hook.html" (dict "hook" "main-before" "context" .) -}}
+      {{ block "main" . }}{{ end }}
+      {{- partials.Include "hook.html" (dict "hook" "main-after" "context" .) -}}
+    </main>
+    {{- partials.Include "hook.html" (dict "hook" "footer-before" "context" .) -}}
+    {{ block "footer" . }}{{ partials.Include "footer.html" . }}{{ end }}
+    {{- partials.Include "hook.html" (dict "hook" "footer-after" "context" .) -}}
+    {{- partials.Include "hook.html" (dict "hook" "body-end" "context" .) -}}
+  </body>
+</html>
+{{- with (templates.Defer (dict "key" "hooks-collector")) -}}
+  {{- partials.Include "func/hooks/collector-dump.html" . }}
+{{ end -}}

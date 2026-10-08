@@ -1,0 +1,12 @@
+{{- /*
+  Переопределение partial темы ananke: точка расширения в конце <head>.
+  Подключает скрипт сайта assets/js/main.js (собирается Hugo через js.Build).
+  Хук "head-end" темы сохранён — через него можно добавлять свои теги.
+*/ -}}
+{{- with resources.Get "js/main.js" -}}
+  {{- $opts := dict "minify" hugo.IsProduction "target" "es2018" "targetPath" "js/main.js" -}}
+  {{- $js := . | js.Build $opts -}}
+  {{- if hugo.IsProduction -}}{{- $js = $js | fingerprint -}}{{- end -}}
+  <script src="{{ $js.RelPermalink }}" defer{{ with $js.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}></script>
+{{- end }}
+{{- partials.Include "hook.html" (dict "hook" "head-end" "context" .) -}}

@@ -1,0 +1,18 @@
+{{- /* Мероприятия: сначала предстоящие (по возрастанию даты), затем прошедшие */ -}}
+{{ define "main" }}
+  {{- $upcoming := slice -}}{{- $past := slice -}}
+  {{- range sort .Pages "Params.eventDate" "asc" -}}
+    {{- if ge (time.AsTime (.Params.eventDate | default .Date)) now -}}{{ $upcoming = $upcoming | append . }}{{ else }}{{ $past = $past | append . }}{{ end -}}
+  {{- end -}}
+  <div class="mx-auto max-w-5xl px-4 py-16 lg:px-8">
+    {{ with .Content }}<div class="prose prose-lg mb-12 max-w-none">{{ . }}</div>{{ end }}
+    {{ with $upcoming }}
+      <h2 class="font-serif text-3xl text-brand" data-animate="fade-up">{{ i18n "upcomingEvents" }}</h2>
+      <div class="mt-6 space-y-4" data-stagger="100">{{ range . }}<div data-animate="fade-up">{{ partials.Include "cards/event.html" (dict "page" .) }}</div>{{ end }}</div>
+    {{ end }}
+    {{ with $past }}
+      <h2 class="mt-16 font-serif text-3xl text-brand" data-animate="fade-up">{{ i18n "pastEvents" }}</h2>
+      <div class="mt-6 space-y-4 opacity-80" data-stagger="100">{{ range sort . "Params.eventDate" "desc" }}<div data-animate="fade-up">{{ partials.Include "cards/event.html" (dict "page" .) }}</div>{{ end }}</div>
+    {{ end }}
+  </div>
+{{ end }}

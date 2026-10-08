@@ -1,0 +1,40 @@
+{{- /*
+  Переопределение partial темы ananke.
+
+  Отличия от оригинала (themes/ananke/layouts/_partials/site-style.html):
+    - Tachyons (_tachyons.css) больше НЕ подключается: вся вёрстка на Tailwind.
+    - Из CSS темы остаются только «семантические» файлы: подсветка кода с кнопкой
+      копирования, иконки соцсетей и стили встроенных шаблонов Hugo.
+    - Tailwind собирается из assets/css/main.css через css.TailwindCSS внутри
+      templates.Defer — так Hugo сначала отрисует все страницы, запишет
+      hugo_stats.json, и только потом Tailwind сгенерирует нужные классы.
+*/ -}}
+
+{{- /* 1. Оставшийся CSS темы ananke */ -}}
+{{- $theme_css := slice -}}
+{{- range slice "_code.css" "_hugo-internal-templates.css" "_social-icons.css" -}}
+  {{- with resources.Get (printf "ananke/css/%s" .) -}}
+    {{- $theme_css = $theme_css | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- with $theme_css -}}
+  {{- $style := . | resources.Concat "css/theme.css" | css.Build (dict "minify" hugo.IsProduction) -}}
+  {{- if hugo.IsProduction -}}{{- $style = $style | resources.Fingerprint -}}{{- end -}}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}"{{ with $style.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}>
+{{- end }}
+
+{{- /* 2. Tailwind CSS */ -}}
+{{ with (templates.Defer (dict "key" "global")) }}
+  {{- with resources.Get "css/main.css" -}}
+    {{- $opts := dict "minify" (not hugo.IsDevelopment) -}}
+    {{- with . | css.TailwindCSS $opts -}}
+      {{- if hugo.IsDevelopment -}}
+        <link rel="stylesheet" href="{{ .RelPermalink }}">
+      {{- else -}}
+        {{- with . | fingerprint -}}
+          <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{ end }}

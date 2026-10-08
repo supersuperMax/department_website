@@ -1,0 +1,29 @@
+{{- /*
+  Галерея картинок из папки страницы (page bundle).
+
+  Использование в .md:
+    {{< gallery >}}                       — все картинки папки, кроме обложки (cover*)
+    {{< gallery match="gallery/*" >}}     — только из подпапки gallery/
+    {{< gallery match="gallery/*" cols="2" >}}
+
+  Клик открывает полноразмерную картинку в новой вкладке.
+*/ -}}
+{{- $match := .Get "match" | default "*" -}}
+{{- $cols := .Get "cols" | default "3" -}}
+{{- $colClass := index (dict "2" "sm:grid-cols-2" "3" "sm:grid-cols-2 lg:grid-cols-3" "4" "sm:grid-cols-2 lg:grid-cols-4") $cols -}}
+{{- $images := slice -}}
+{{- range .Page.Resources.Match $match -}}
+  {{- if and (eq .ResourceType "image") (not (findRE `(?i)(cover|feature)` .Name)) -}}{{- $images = $images | append . -}}{{- end -}}
+{{- end -}}
+{{- with $images }}
+<div class="not-prose my-10 grid gap-4 {{ $colClass }}" data-stagger="80">
+  {{- range . }}
+    {{- $thumb := .Fill "600x450 webp Smart" -}}
+    {{- $full := cond (gt .Width 1920) (.Resize "1920x webp") . -}}
+    <a href="{{ $full.RelPermalink }}" target="_blank" rel="noopener" class="group block overflow-hidden rounded-lg shadow-sm" data-animate="zoom-in">
+      <img src="{{ $thumb.RelPermalink }}" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" alt="{{ .Title }}" loading="lazy"
+           class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+    </a>
+  {{- end }}
+</div>
+{{- end }}

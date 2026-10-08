@@ -1,0 +1,362 @@
+# =============================================================================
+#  Сайт кафедры МГУ — конфигурация Hugo
+#  Тема: ananke (git-подмодуль, не редактируется) + переопределения в layouts/
+#  Стили: Tailwind CSS v4 (assets/css/main.css), Tachyons из ananke отключён
+#  Хостинг: GitHub Pages (baseURL подменяется в CI, см. .github/workflows/hugo.yaml)
+# =============================================================================
+
+# Заглушка. В GitHub Actions передаётся --baseURL из actions/configure-pages,
+# поэтому сайт работает и как https://<user>.github.io/, и как https://<user>.github.io/<repo>/.
+# ВАЖНО: в шаблонах используйте только .RelPermalink / relURL — без ссылок, начинающихся с "/".
+baseURL = 'https://example.github.io/department_website/'
+theme = 'ananke'
+title = 'Кафедра … МГУ'
+enableRobotsTXT = true
+enableGitInfo = false
+# не превращать «летняя школа» в «Летняя Школа» в заголовках тегов
+capitalizeListTitles = false
+timeZone = 'Europe/Moscow'
+
+# ---------------------------------------------------------------- Языки ------
+# ru — основной язык, живёт в корне сайта (/), остальные — в /<lang>/.
+defaultContentLanguage = 'ru'
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.ru]
+    locale = 'ru-RU'
+    label = 'Русский'
+    weight = 1
+    title = 'Кафедра … МГУ'
+    [languages.ru.params]
+      description = 'Кафедра … Московского государственного университета имени М. В. Ломоносова'
+      department_short = 'Кафедра …'
+      university = 'МГУ имени М. В. Ломоносова'
+      address = '119991, Москва, Ленинские горы, д. 1'
+      email = 'info@example.msu.ru'
+      phone = '+7 (495) 000-00-00'
+      date_format = '2 January 2006'
+
+  [languages.en]
+    locale = 'en-US'
+    label = 'English'
+    weight = 2
+    title = 'Department of … MSU'
+    [languages.en.params]
+      description = 'Department of … at Lomonosov Moscow State University'
+      department_short = 'Department of …'
+      university = 'Lomonosov Moscow State University'
+      address = '1 Leninskie Gory, Moscow, 119991, Russia'
+      email = 'info@example.msu.ru'
+      phone = '+7 (495) 000-00-00'
+      date_format = 'January 2, 2006'
+
+  # --- Шаблон для новых языков: раскомментируйте, добавьте файлы *.zh.md / *.de.md рядом
+  #     с существующими (index.zh.md, _index.zh.md) и создайте i18n/<lang>.toml
+  # [languages.zh]
+  #   locale = 'zh-CN'
+  #   label = '中文'
+  #   weight = 3
+  #   title = '莫斯科国立大学 … 系'
+  #   [languages.zh.params]
+  #     description = '…'
+  #     department_short = '… 系'
+  #     university = '莫斯科国立大学'
+  #     date_format = '2006年1月2日'
+  #
+  # [languages.de]
+  #   locale = 'de-DE'
+  #   label = 'Deutsch'
+  #   weight = 4
+  #   title = 'Lehrstuhl für … MSU'
+  #   [languages.de.params]
+  #     description = '…'
+  #     department_short = 'Lehrstuhl für …'
+  #     university = 'Lomonossow-Universität Moskau'
+  #     date_format = '2. January 2006'
+
+# ---------------------------------------------------------------- Меню -------
+# main  — верхняя навигация (пункты с parent попадают в выпадающее мега-меню)
+# footer — колонки в подвале
+# pageRef — путь к странице в content/ (без суффикса языка); Hugo сам подставит язык и baseURL.
+[languages.ru.menus]
+  [[languages.ru.menus.main]]
+    identifier = 'about'
+    name = 'О кафедре'
+    pageRef = '/about'
+    weight = 10
+  [[languages.ru.menus.main]]
+    parent = 'about'
+    name = 'Общая информация'
+    pageRef = '/about'
+    weight = 1
+  [[languages.ru.menus.main]]
+    parent = 'about'
+    name = 'История'
+    pageRef = '/about/history'
+    weight = 2
+  [[languages.ru.menus.main]]
+    parent = 'about'
+    name = 'Контакты'
+    pageRef = '/contacts'
+    weight = 3
+
+  [[languages.ru.menus.main]]
+    identifier = 'education'
+    name = 'Образование'
+    pageRef = '/education'
+    weight = 20
+  [[languages.ru.menus.main]]
+    parent = 'education'
+    name = 'Бакалавриат'
+    pageRef = '/education/bachelor'
+    weight = 1
+  [[languages.ru.menus.main]]
+    parent = 'education'
+    name = 'Магистратура'
+    pageRef = '/education/master'
+    weight = 2
+  [[languages.ru.menus.main]]
+    parent = 'education'
+    name = 'Аспирантура'
+    pageRef = '/education/phd'
+    weight = 3
+
+  [[languages.ru.menus.main]]
+    identifier = 'research'
+    name = 'Наука'
+    pageRef = '/research'
+    weight = 30
+  [[languages.ru.menus.main]]
+    identifier = 'people'
+    name = 'Сотрудники'
+    pageRef = '/people'
+    weight = 40
+  [[languages.ru.menus.main]]
+    identifier = 'news'
+    name = 'Новости'
+    pageRef = '/news'
+    weight = 50
+  [[languages.ru.menus.main]]
+    identifier = 'events'
+    name = 'Мероприятия'
+    pageRef = '/events'
+    weight = 60
+  [[languages.ru.menus.main]]
+    identifier = 'contacts'
+    name = 'Контакты'
+    pageRef = '/contacts'
+    weight = 70
+
+  [[languages.ru.menus.footer]]
+    name = 'О кафедре'
+    pageRef = '/about'
+    weight = 1
+  [[languages.ru.menus.footer]]
+    name = 'Образование'
+    pageRef = '/education'
+    weight = 2
+  [[languages.ru.menus.footer]]
+    name = 'Наука'
+    pageRef = '/research'
+    weight = 3
+  [[languages.ru.menus.footer]]
+    name = 'Сотрудники'
+    pageRef = '/people'
+    weight = 4
+  [[languages.ru.menus.footer]]
+    name = 'Новости'
+    pageRef = '/news'
+    weight = 5
+  [[languages.ru.menus.footer]]
+    name = 'Мероприятия'
+    pageRef = '/events'
+    weight = 6
+
+[languages.en.menus]
+  [[languages.en.menus.main]]
+    identifier = 'about'
+    name = 'About'
+    pageRef = '/about'
+    weight = 10
+  [[languages.en.menus.main]]
+    parent = 'about'
+    name = 'Overview'
+    pageRef = '/about'
+    weight = 1
+  [[languages.en.menus.main]]
+    parent = 'about'
+    name = 'History'
+    pageRef = '/about/history'
+    weight = 2
+  [[languages.en.menus.main]]
+    parent = 'about'
+    name = 'Contacts'
+    pageRef = '/contacts'
+    weight = 3
+
+  [[languages.en.menus.main]]
+    identifier = 'education'
+    name = 'Education'
+    pageRef = '/education'
+    weight = 20
+  [[languages.en.menus.main]]
+    parent = 'education'
+    name = 'Bachelor'
+    pageRef = '/education/bachelor'
+    weight = 1
+  [[languages.en.menus.main]]
+    parent = 'education'
+    name = 'Master'
+    pageRef = '/education/master'
+    weight = 2
+  [[languages.en.menus.main]]
+    parent = 'education'
+    name = 'PhD'
+    pageRef = '/education/phd'
+    weight = 3
+
+  [[languages.en.menus.main]]
+    identifier = 'research'
+    name = 'Research'
+    pageRef = '/research'
+    weight = 30
+  [[languages.en.menus.main]]
+    identifier = 'people'
+    name = 'People'
+    pageRef = '/people'
+    weight = 40
+  [[languages.en.menus.main]]
+    identifier = 'news'
+    name = 'News'
+    pageRef = '/news'
+    weight = 50
+  [[languages.en.menus.main]]
+    identifier = 'events'
+    name = 'Events'
+    pageRef = '/events'
+    weight = 60
+  [[languages.en.menus.main]]
+    identifier = 'contacts'
+    name = 'Contacts'
+    pageRef = '/contacts'
+    weight = 70
+
+  [[languages.en.menus.footer]]
+    name = 'About'
+    pageRef = '/about'
+    weight = 1
+  [[languages.en.menus.footer]]
+    name = 'Education'
+    pageRef = '/education'
+    weight = 2
+  [[languages.en.menus.footer]]
+    name = 'Research'
+    pageRef = '/research'
+    weight = 3
+  [[languages.en.menus.footer]]
+    name = 'People'
+    pageRef = '/people'
+    weight = 4
+  [[languages.en.menus.footer]]
+    name = 'News'
+    pageRef = '/news'
+    weight = 5
+  [[languages.en.menus.footer]]
+    name = 'Events'
+    pageRef = '/events'
+    weight = 6
+
+# ---------------------------------------------------------- Параметры --------
+[params]
+  mainSections = ['news']
+  # Логотип (путь от static/ или assets/). Пусто — выводится текстовое название.
+  site_logo = ''
+  university_url = 'https://www.msu.ru'
+  # Ссылка «Поступающим» в верхней полосе
+  admissions_page = '/education'
+
+  [params.animations]
+    enable = true           # глобальный выключатель всех анимаций
+    reveal = true           # появление блоков при прокрутке (data-animate)
+    viewTransitions = true  # плавные переходы между страницами (View Transitions API)
+    hideHeaderOnScroll = true
+    heroInterval = 7000     # мс между слайдами на главной; 0 — без автопрокрутки
+    counters = true         # анимация счётчиков на главной
+
+  # Параметры темы ananke, которые по-прежнему используются
+  [params.ananke]
+    show_recent_posts = false
+    copy_code = true
+    # Иконки соцсетей в подвале (партиал темы social/follow.html).
+    # Список доступных сетей: themes/ananke/config/_default/params.toml
+    [params.ananke.social.follow]
+      networks = ['telegram', 'youtube', 'github']
+    [params.ananke.social.telegram]
+      username = 'msu_example'
+    [params.ananke.social.youtube]
+      username = 'msu_example'
+    [params.ananke.social.github]
+      username = 'msu-example'
+
+# ----------------------------------------------- Tailwind (css.TailwindCSS) --
+[build]
+  [build.buildStats]
+    enable = true
+  [[build.cachebusters]]
+    source = 'assets/notwatching/hugo_stats\.json'
+    target = 'css'
+  [[build.cachebusters]]
+    source = '(postcss|tailwind)\.config\.js'
+    target = 'css'
+
+[module]
+  [module.hugoVersion]
+    extended = false
+    min = '0.160.0'
+  [[module.mounts]]
+    source = 'assets'
+    target = 'assets'
+  [[module.mounts]]
+    disableWatch = true
+    source = 'hugo_stats.json'
+    target = 'assets/notwatching/hugo_stats.json'
+
+# Hugo запускает CLI tailwindcss из node_modules — его нужно явно разрешить.
+[security]
+  [security.exec]
+    allow = ['^(dart-)?sass$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']
+
+# ---------------------------------------------------------- Прочее -----------
+[pagination]
+  pagerSize = 9
+
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+  # картинка на отдельной строке рендерится как <figure> (render-image.html), без обёртки <p>
+  [markup.goldmark.parser]
+    wrapStandAloneImageWithinParagraph = false
+    [markup.goldmark.parser.attribute]
+      block = true
+  [markup.highlight]
+    noClasses = false
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[imaging]
+  resampleFilter = 'Lanczos'
+  anchor = 'Smart'
+  [imaging.jpeg]
+    quality = 82
+  [imaging.webp]
+    quality = 80
+
+[outputs]
+  home = ['html', 'rss']
+  section = ['html', 'rss']

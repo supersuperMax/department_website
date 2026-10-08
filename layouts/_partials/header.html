@@ -1,0 +1,124 @@
+{{- /*
+  Шапка сайта в стиле mit.edu:
+    1. верхняя полоса — ссылка на университет, «Поступающим», переключатель языка;
+    2. основная полоса — логотип/название и навигация из меню "main" (hugo.toml).
+       Пункты с вложенными пунктами (parent) раскрываются в мега-меню.
+    3. мобильное меню — выезжающая справа панель (до брейкпоинта lg).
+  Поведение (скрытие при прокрутке, мега-меню, бургер) — assets/js/main.js.
+*/ -}}
+{{- $page := . -}}
+<header class="site-header sticky top-0 z-50 bg-brand text-white">
+  {{/* 1. Верхняя полоса */}}
+  <div class="hidden border-b border-white/10 bg-black text-sm md:block">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-1.5 lg:px-8">
+      <a href="{{ site.Params.university_url }}" class="link-underline text-white/70 hover:text-white" target="_blank" rel="noopener">{{ site.Params.university }}</a>
+      <div class="flex items-center gap-6">
+        {{ with site.GetPage site.Params.admissions_page }}
+          <a href="{{ .RelPermalink }}" class="link-underline text-white/70 hover:text-white">{{ i18n "admissions" }}</a>
+        {{ end }}
+        {{ partials.Include "lang-switcher.html" (dict "page" $page) }}
+      </div>
+    </div>
+  </div>
+
+  {{/* 2. Основная полоса */}}
+  <div class="header-main relative py-4 transition-all duration-300">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 lg:px-8">
+      <a href="{{ site.Home.RelPermalink }}" class="group flex items-center gap-3" aria-label="{{ site.Title }}">
+        {{ with site.Params.site_logo }}
+          <img src="{{ strings.TrimPrefix "/" . | relURL }}" alt="{{ site.Title }}" class="h-10 w-auto">
+        {{ else }}
+          <span class="grid h-10 w-10 place-items-center bg-accent font-serif text-lg font-bold transition-transform duration-300 group-hover:rotate-6">{{ substr site.Title 0 1 }}</span>
+          <span class="leading-tight">
+            <span class="block font-serif text-lg font-semibold tracking-wide sm:text-xl">{{ site.Params.department_short }}</span>
+            <span class="block text-xs uppercase tracking-[0.2em] text-white/60">{{ site.Params.university }}</span>
+          </span>
+        {{ end }}
+      </a>
+
+      <nav class="hidden lg:block" aria-label="{{ i18n "mainMenu" }}">
+        <ul class="flex items-center">
+          {{- range site.Menus.main }}
+            {{- $active := or ($page.IsMenuCurrent "main" .) ($page.HasMenuCurrent "main" .) }}
+            {{- if .HasChildren }}
+              <li class="has-mega">
+                <div class="flex items-center">
+                  <a href="{{ .URL }}" class="nav-link flex items-center px-3 py-2 text-[15px] font-medium transition-colors hover:text-white {{ if $active }}text-white{{ else }}text-white/80{{ end }}">{{ .Name }}</a>
+                  <button type="button" aria-expanded="false" aria-controls="mega-{{ .Identifier }}" class="-ml-2 p-1 text-white/60 hover:text-white">
+                    <span class="sr-only">{{ .Name }}</span>
+                    <svg class="h-4 w-4 transition-transform duration-300 [.is-open_&]:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+                  </button>
+                </div>
+                {{/* Мега-панель на всю ширину шапки */}}
+                <div id="mega-{{ .Identifier }}" class="mega-panel absolute inset-x-0 top-full border-t-4 border-accent bg-white text-brand shadow-2xl">
+                  <div class="mx-auto grid max-w-7xl gap-10 px-8 py-10 lg:grid-cols-3">
+                    <div>
+                      <p class="font-serif text-3xl">{{ .Name }}</p>
+                      {{ with .Page }}{{ with .Description }}<p class="mt-3 text-neutral-600">{{ . }}</p>{{ end }}{{ end }}
+                      <a href="{{ .URL }}" class="mt-6 inline-flex items-center gap-2 font-semibold text-accent hover:gap-3 transition-all">{{ i18n "explore" }} <span aria-hidden="true">→</span></a>
+                    </div>
+                    <ul class="grid gap-x-8 gap-y-1 sm:grid-cols-2 lg:col-span-2">
+                      {{- range .Children }}
+                        <li>
+                          <a href="{{ .URL }}" class="group/item block border-b border-neutral-200 py-3 transition-colors hover:border-accent">
+                            <span class="font-semibold group-hover/item:text-accent">{{ .Name }}</span>
+                            {{ with .Page }}{{ with .Description }}<span class="mt-0.5 block text-sm text-neutral-500">{{ . | truncate 90 }}</span>{{ end }}{{ end }}
+                          </a>
+                        </li>
+                      {{- end }}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            {{- else }}
+              <li>
+                <a href="{{ .URL }}" {{ if $active }}aria-current="page"{{ end }} class="nav-link relative block px-3 py-2 text-[15px] font-medium transition-colors hover:text-white after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:origin-left after:bg-accent after:transition-transform after:duration-300 hover:after:scale-x-100 {{ if $active }}text-white after:scale-x-100{{ else }}text-white/80 after:scale-x-0{{ end }}">{{ .Name }}</a>
+              </li>
+            {{- end }}
+          {{- end }}
+        </ul>
+      </nav>
+
+      <button type="button" data-nav-open aria-controls="mobile-nav" aria-expanded="false" class="rounded p-2 hover:bg-white/10 lg:hidden">
+        <span class="sr-only">{{ i18n "openMenu" }}</span>
+        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+{{/* 3. Мобильное меню */}}
+<div id="mobile-nav-overlay" class="fixed inset-0 z-[60] hidden bg-black/50 backdrop-blur-sm lg:hidden"></div>
+<nav id="mobile-nav" data-open="false" aria-label="{{ i18n "mainMenu" }}" class="mobile-nav fixed inset-y-0 right-0 z-[70] flex w-[88%] max-w-sm flex-col overflow-y-auto bg-brand text-white shadow-2xl lg:hidden">
+  <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
+    {{ partials.Include "lang-switcher.html" (dict "page" $page) }}
+    <button type="button" data-nav-close class="rounded p-2 hover:bg-white/10">
+      <span class="sr-only">{{ i18n "closeMenu" }}</span>
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <ul class="flex-1 px-5 py-4">
+    {{- range site.Menus.main }}
+      <li class="border-b border-white/10">
+        {{- if .HasChildren }}
+          <details class="group">
+            <summary class="flex cursor-pointer list-none items-center justify-between py-4 text-lg font-medium">
+              {{ .Name }}
+              <svg class="h-5 w-5 transition-transform duration-300 group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            </summary>
+            <ul class="pb-3 pl-4">
+              {{- range .Children }}
+                <li><a href="{{ .URL }}" class="block py-2 text-white/75 hover:text-white">{{ .Name }}</a></li>
+              {{- end }}
+            </ul>
+          </details>
+        {{- else }}
+          <a href="{{ .URL }}" class="block py-4 text-lg font-medium">{{ .Name }}</a>
+        {{- end }}
+      </li>
+    {{- end }}
+  </ul>
+  <div class="border-t border-white/10 px-5 py-4 text-sm text-white/60">
+    <a href="{{ site.Params.university_url }}" target="_blank" rel="noopener">{{ site.Params.university }}</a>
+  </div>
+</nav>

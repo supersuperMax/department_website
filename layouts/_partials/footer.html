@@ -1,0 +1,38 @@
+{{- /*
+  Подвал: название и контакты (params языка в hugo.toml), меню "footer",
+  иконки соцсетей (партиал темы social/follow.html, настройка params.ananke.social),
+  переключатель языка и копирайт.
+*/ -}}
+<footer class="mt-24 bg-brand text-white/80" role="contentinfo">
+  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+    <div class="lg:col-span-2" data-animate="fade-up">
+      <a href="{{ site.Home.RelPermalink }}" class="font-serif text-2xl text-white">{{ site.Title }}</a>
+      <p class="mt-3 max-w-md text-white/60">{{ site.Params.description }}</p>
+      <div class="ananke-socials-wrap mt-6 [&_.ananke-socials]:flex [&_.ananke-socials]:gap-4 [&_svg]:h-6 [&_svg]:w-6 [&_svg]:fill-current [&_a]:text-white/60 [&_a:hover]:text-white [&_a]:transition-colors">
+        {{ partials.IncludeCached "social/follow.html" . }}
+      </div>
+    </div>
+    <nav aria-label="{{ i18n "footerMenu" }}" data-animate="fade-up" data-delay="100">
+      <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">{{ i18n "sections" }}</h2>
+      <ul class="mt-4 space-y-2">
+        {{- range site.Menus.footer }}
+          <li><a href="{{ .URL }}" class="link-underline hover:text-white">{{ .Name }}</a></li>
+        {{- end }}
+      </ul>
+    </nav>
+    <div data-animate="fade-up" data-delay="200">
+      <h2 class="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">{{ i18n "contacts" }}</h2>
+      <address class="mt-4 space-y-2 not-italic">
+        {{ with site.Params.address }}<p>{{ . }}</p>{{ end }}
+        {{ with site.Params.phone }}<p><a href="tel:{{ replaceRE `[^+\d]` "" . }}" class="hover:text-white">{{ . }}</a></p>{{ end }}
+        {{ with site.Params.email }}<p><a href="mailto:{{ . }}" class="hover:text-white">{{ . }}</a></p>{{ end }}
+      </address>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-6 text-sm text-white/50 sm:flex-row lg:px-8">
+      <p>&copy; {{ now.Format "2006" }} {{ site.Params.university }}{{ with site.Copyright }}{{ if ne . site.Params.university }} · {{ . }}{{ end }}{{ end }}</p>
+      {{ partials.Include "lang-switcher.html" (dict "page" .) }}
+    </div>
+  </div>
+</footer>

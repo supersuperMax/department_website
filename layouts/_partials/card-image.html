@@ -1,0 +1,21 @@
+{{- /*
+  Картинка для карточки: обложка страницы (логика ananke GetFeaturedImage),
+  обрезанная под нужные пропорции и сжатая в webp; плавное увеличение при
+  наведении на карточку (класс group на родителе).
+  Параметры: dict "page" <страница> "size" "800x500" "class" <доп. классы>
+*/ -}}
+{{- $page := .page -}}
+{{- $size := .size | default "800x500" -}}
+{{- $res := partials.Include "func/GetFeaturedImageResource.html" $page -}}
+{{- $url := partials.Include "func/GetFeaturedImage.html" $page -}}
+<div class="overflow-hidden bg-neutral-200 {{ .class }}">
+  {{- if and $res (ne $res.MediaType.SubType "svg") }}
+    {{- $img := $res.Fill (printf "%s webp Smart" $size) }}
+    <img src="{{ $img.RelPermalink }}" width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ $page.Title }}" loading="lazy" decoding="async"
+         class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+  {{- else if $url }}
+    <img src="{{ $url }}" alt="{{ $page.Title }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+  {{- else }}
+    <div class="grid h-full w-full place-items-center bg-gradient-to-br from-brand to-accent-dark font-serif text-5xl text-white/30">{{ substr $page.Title 0 1 }}</div>
+  {{- end }}
+</div>

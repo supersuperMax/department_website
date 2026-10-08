@@ -1,0 +1,12 @@
+{{- /*
+  Кнопка-ссылка.
+    {{< button href="/education/master" >}}Подробнее{{< /button >}}
+    {{< button href="https://example.org" style="outline" >}}Сайт{{< /button >}}
+  Внутренние пути (начинаются с "/") ищутся как страницы сайта текущего языка.
+*/ -}}
+{{- $href := .Get "href" -}}
+{{- if hasPrefix $href "/" -}}
+  {{- with site.GetPage $href }}{{ $href = .RelPermalink }}{{ else }}{{ $href = strings.TrimPrefix "/" $href | relLangURL }}{{ end -}}
+{{- end -}}
+{{- $outline := eq (.Get "style") "outline" -}}
+<a href="{{ $href }}" class="not-prose my-2 mr-2 inline-flex items-center gap-2 px-6 py-3 font-semibold no-underline transition-colors {{ if $outline }}border-2 border-brand text-brand hover:bg-brand hover:text-white{{ else }}bg-accent text-white hover:bg-brand{{ end }}">{{ .Inner | markdownify }} <span aria-hidden="true">→</span></a>

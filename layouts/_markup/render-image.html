@@ -1,0 +1,36 @@
+{{- /*
+  Рендер markdown-картинок ![alt](file.jpg "Подпись").
+  - Файл ищется в папке страницы (page bundle), затем в assets/.
+    Найденная растровая картинка ужимается до нескольких ширин в webp (srcset),
+    грузится лениво (loading="lazy") и плавно появляется при прокрутке.
+  - Внешние ссылки и файлы из static/ выводятся как есть (с поправкой на baseURL).
+  - Заголовок в кавычках становится подписью <figcaption>.
+*/ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $src := $u.String -}}
+{{- $res := false -}}
+{{- if not $u.IsAbs -}}
+  {{- $path := strings.TrimPrefix "./" $u.Path -}}
+  {{- with or (.PageInner.Resources.Get $path) (resources.Get $path) -}}
+    {{- $res = . -}}
+  {{- else -}}
+    {{- $src = strings.TrimPrefix "/" $path | relURL -}}{{/* без ведущего "/" relURL учитывает подпуть GitHub Pages */}}
+  {{- end -}}
+{{- end -}}
+{{- if .IsBlock }}<figure class="not-prose my-8" data-animate="fade-up">{{ end }}
+  {{- if and $res (in (slice "jpeg" "png" "webp" "gif" "bmp" "tiff") $res.MediaType.SubType) (ne $res.MediaType.SubType "gif") }}
+    {{- $set := slice -}}{{- $fallback := $res -}}
+    {{- range slice 480 960 1440 -}}
+      {{- if le . $res.Width -}}
+        {{- $r := $res.Resize (printf "%dx webp" .) -}}
+        {{- $set = $set | append (printf "%s %dw" $r.RelPermalink .) -}}{{- $fallback = $r -}}
+      {{- end -}}
+    {{- end }}
+    <img src="{{ $fallback.RelPermalink }}" {{ with $set }}srcset="{{ delimit . ", " }}" sizes="(min-width: 768px) 768px, 100vw"{{ end }}
+         width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" alt="{{ .PlainText }}" loading="lazy" decoding="async"
+         class="mx-auto h-auto w-full rounded-lg shadow-md">
+  {{- else }}
+    <img src="{{ with $res }}{{ .RelPermalink }}{{ else }}{{ $src }}{{ end }}" alt="{{ .PlainText }}" loading="lazy" class="mx-auto h-auto max-w-full rounded-lg shadow-md">
+  {{- end }}
+  {{- if .IsBlock }}{{- with .Title }}<figcaption class="mt-3 text-center text-sm text-neutral-500">{{ . }}</figcaption>{{ end }}
+</figure>{{ end }}

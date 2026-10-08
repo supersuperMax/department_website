@@ -1,0 +1,11 @@
+{{- /* Пагинация списков (замена встроенного pagination.html, который был свёрстан под Tachyons) */ -}}
+{{- $pag := .Paginator -}}
+{{- if gt $pag.TotalPages 1 }}
+<nav class="mt-12 flex items-center justify-center gap-2" aria-label="{{ i18n "pagination" }}">
+  {{ with $pag.Prev }}<a href="{{ .URL }}" class="px-4 py-2 ring-1 ring-neutral-300 hover:bg-brand hover:text-white">←</a>{{ end }}
+  {{- range $pag.Pagers }}
+    <a href="{{ .URL }}" {{ if eq . $pag }}aria-current="page"{{ end }} class="px-4 py-2 ring-1 {{ if eq . $pag }}bg-brand text-white ring-brand{{ else }}ring-neutral-300 hover:bg-neutral-100{{ end }}">{{ .PageNumber }}</a>
+  {{- end }}
+  {{ with $pag.Next }}<a href="{{ .URL }}" class="px-4 py-2 ring-1 ring-neutral-300 hover:bg-brand hover:text-white">→</a>{{ end }}
+</nav>
+{{- end }}

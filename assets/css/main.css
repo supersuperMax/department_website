@@ -1,0 +1,148 @@
+/*
+ * Главная таблица стилей сайта (Tailwind CSS v4).
+ * Собирается Hugo через css.TailwindCSS в layouts/_partials/site-style.html.
+ * Tailwind находит используемые классы в hugo_stats.json, который Hugo пишет
+ * при сборке (build.buildStats в hugo.toml) — дополнительная настройка не нужна.
+ */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@source "hugo_stats.json";
+
+/* ---------------------------------------------------------------- Токены -- */
+@theme {
+  /* Шрифты как в ananke: avenir для текста, athelas/georgia для заголовков */
+  --font-sans: "avenir next", avenir, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: athelas, georgia, "Times New Roman", serif;
+
+  /* Тёмная шапка/подвал (bg-black в ananke) и акцентный цвет */
+  --color-brand: #111111;
+  --color-brand-soft: #1d1d1f;
+  --color-accent: #a31f34;
+  --color-accent-dark: #7d1527;
+  --color-paper: #f4f4f4; /* bg-near-white в ananke */
+
+  /* Анимации: используйте как классы animate-fade-up, animate-ken-burns и т. д. */
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.8s ease-out both;
+  --animate-ken-burns: ken-burns 14s ease-out both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(2rem); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes ken-burns {
+    from { transform: scale(1.12); }
+    to   { transform: scale(1); }
+  }
+}
+
+/* ------------------------------------------------------------ База ------- */
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-paper font-sans text-neutral-800 antialiased; }
+  h1, h2, h3 { text-wrap: balance; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-accent; }
+}
+
+/* ---------------------------------------------- Появление при прокрутке --- */
+/*
+ * Разметка:  <div data-animate="fade-up" data-delay="200">…</div>
+ * Скрипт assets/js/main.js добавляет класс .is-visible, когда элемент
+ * попадает в область видимости. Класс .js-anim на <html> ставится только
+ * если анимации включены, поэтому без JS контент всегда виден.
+ * Новая анимация = новый блок [data-animate="имя"] ниже.
+ */
+.js-anim [data-animate] {
+  opacity: 0;
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.9s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+.js-anim [data-animate="fade-up"]    { transform: translateY(2.5rem); }
+.js-anim [data-animate="fade-down"]  { transform: translateY(-2rem); }
+.js-anim [data-animate="slide-left"] { transform: translateX(3rem); }
+.js-anim [data-animate="slide-right"]{ transform: translateX(-3rem); }
+.js-anim [data-animate="zoom-in"]    { transform: scale(0.92); }
+.js-anim [data-animate="blur-in"]    { filter: blur(12px); }
+.js-anim [data-animate].is-visible   { opacity: 1; transform: none; filter: none; }
+
+/* -------------------------------------------------------------- Шапка ---- */
+.site-header { transition: transform 0.35s ease, background-color 0.3s ease, box-shadow 0.3s ease; }
+.site-header.is-hidden { transform: translateY(-100%); }
+.site-header.is-scrolled { @apply shadow-lg; }
+.site-header.is-scrolled .header-main { @apply py-2; }
+
+/* Мега-меню: раскрывается по hover/focus (desktop) и по клику (JS, aria-expanded) */
+.mega-panel {
+  @apply invisible opacity-0 -translate-y-2 pointer-events-none;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+/* невидимый «мостик», чтобы меню не закрывалось при переводе курсора вниз */
+.mega-panel::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: 1.75rem; }
+.has-mega:hover > .mega-panel,
+.has-mega:focus-within > .mega-panel,
+.has-mega.is-open > .mega-panel {
+  @apply visible opacity-100 translate-y-0 pointer-events-auto;
+}
+
+/* Мобильное меню */
+.mobile-nav { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.mobile-nav[data-open="false"] { transform: translateX(100%); }
+.mobile-nav[data-open="true"]  { transform: none; }
+
+/* -------------------------------------------------------- Hero-слайдер --- */
+.hero-slide { transition: opacity 1.2s ease; }
+.hero-slide[aria-hidden="true"] { @apply opacity-0 pointer-events-none; }
+.hero-slide[aria-hidden="false"] { @apply opacity-100; }
+.hero-slide[aria-hidden="false"] .hero-img { animation: var(--animate-ken-burns); }
+.hero-slide[aria-hidden="false"] .hero-text > * { animation: var(--animate-fade-up); }
+.hero-slide[aria-hidden="false"] .hero-text > *:nth-child(2) { animation-delay: 0.15s; }
+.hero-slide[aria-hidden="false"] .hero-text > *:nth-child(3) { animation-delay: 0.3s; }
+.hero-dot[aria-current="true"] { @apply bg-white w-10; }
+
+/* Подчёркивание ссылок, вырастающее слева (как на mit.edu) */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease;
+}
+.link-underline:hover, .link-underline:focus-visible { background-size: 100% 2px; }
+
+/* ------------------------------------------------ Переходы страниц ------- */
+/* View Transitions API. Если params.animations.viewTransitions = false,
+   baseof.html добавляет inline-стиль @view-transition { navigation: none; } */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 0.25s ease both fade-out-vt; }
+::view-transition-new(root) { animation: 0.35s ease both fade-in-vt; }
+@keyframes fade-out-vt { to { opacity: 0; } }
+@keyframes fade-in-vt { from { opacity: 0; } }
+
+/* Контент статей: typography-плагин + немного правок */
+.prose img { @apply rounded-lg shadow-md; }
+.prose figure figcaption { @apply text-center text-sm text-neutral-500; }
+.prose .code-block { @apply my-6; }
+
+/* ---------------------------------------- Уважение к reduce-motion ------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js-anim [data-animate] { opacity: 1; transform: none; filter: none; }
+  @view-transition { navigation: none; }
+}
+
+/* Убираем обратные кавычки, которые typography-плагин рисует вокруг `inline code` */
+.prose :where(code):not(:where(pre *))::before,
+.prose :where(code):not(:where(pre *))::after { content: none; }
+.prose :where(code):not(:where(pre *)) { @apply rounded bg-neutral-200 px-1.5 py-0.5 font-normal; }

@@ -1,0 +1,8 @@
+{{ define "header" }}{{ end }}
+{{ define "main" }}
+  <section class="mx-auto flex max-w-3xl flex-col items-center px-4 py-32 text-center">
+    <p class="animate-fade-up font-serif text-9xl text-accent">404</p>
+    <h1 class="mt-6 animate-fade-up font-serif text-3xl text-brand [animation-delay:.1s]">{{ i18n "notFound" }}</h1>
+    <a href="{{ site.Home.RelPermalink }}" class="mt-10 animate-fade-up bg-brand px-6 py-3 font-semibold text-white transition-colors hover:bg-accent [animation-delay:.2s]">{{ i18n "home" }}</a>
+  </section>
+{{ end }}

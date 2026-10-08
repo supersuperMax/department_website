@@ -1,0 +1,19 @@
+{{- /* Карточка мероприятия. Front matter события: eventDate, eventEnd, location */ -}}
+{{- $p := .page -}}
+{{- $d := time.AsTime ($p.Params.eventDate | default $p.Date) -}}
+<article class="group relative flex gap-5 bg-white p-5 shadow-sm ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+  <div class="flex w-20 shrink-0 flex-col items-center justify-center bg-brand py-3 text-white transition-colors group-hover:bg-accent">
+    <span class="font-serif text-3xl leading-none">{{ $d.Format "02" }}</span>
+    <span class="mt-1 text-xs uppercase tracking-widest">{{ $d | time.Format "Jan" }}</span>
+    <span class="text-[11px] text-white/60">{{ $d.Format "2006" }}</span>
+  </div>
+  <div class="min-w-0">
+    <h3 class="font-serif text-xl leading-snug text-brand group-hover:text-accent">
+      <a href="{{ $p.RelPermalink }}" class="after:absolute after:inset-0">{{ $p.Title }}</a>
+    </h3>
+    <p class="mt-2 text-sm text-neutral-500">
+      {{ $d | time.Format ":time_short" }}{{ with $p.Params.location }} · {{ . }}{{ end }}
+    </p>
+    {{ with $p.Description }}<p class="mt-2 line-clamp-2 text-neutral-600">{{ . }}</p>{{ end }}
+  </div>
+</article>

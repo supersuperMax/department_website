@@ -1,0 +1,27 @@
+{{- /*
+  Переключатель языка. Перебирает все языки сайта (hugo.Sites), поэтому новый
+  язык из hugo.toml появится здесь автоматически.
+  Если у текущей страницы есть перевод — ссылка ведёт на него,
+  иначе — на главную страницу выбранного языка.
+
+  Параметры: dict "page" <страница> "class" <доп. классы контейнера>
+*/ -}}
+{{- $page := .page -}}
+<ul class="flex items-center gap-1 {{ .class }}" aria-label="{{ i18n "language" }}">
+  {{- range hugo.Sites }}
+    {{- $lang := .Language.Name -}}
+    {{- $href := .Home.RelPermalink -}}
+    {{- range $page.AllTranslations }}
+      {{- if eq .Language.Name $lang }}{{ $href = .RelPermalink }}{{ end -}}
+    {{- end }}
+    {{- $current := eq $lang $page.Language.Name }}
+    <li>
+      <a href="{{ $href }}" hreflang="{{ .Language.Locale }}" lang="{{ .Language.Locale }}"
+         title="{{ .Language.Label }}"
+         {{ if $current }}aria-current="true"{{ end }}
+         class="block rounded px-2 py-1 text-xs font-semibold uppercase tracking-wider transition-colors {{ if $current }}bg-white text-brand{{ else }}text-white/70 hover:bg-white/10 hover:text-white{{ end }}">
+        {{- $lang -}}
+      </a>
+    </li>
+  {{- end }}
+</ul>

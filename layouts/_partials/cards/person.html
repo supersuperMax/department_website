@@ -1,0 +1,12 @@
+{{- /* Карточка сотрудника. Front matter: position, degree, email; фото — файл cover.jpg в папке сотрудника или featured_image */ -}}
+{{- $p := .page -}}
+<article class="group relative overflow-hidden bg-white text-center shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-xl">
+  {{ partials.Include "card-image.html" (dict "page" $p "size" "600x700" "class" "aspect-[6/7]") }}
+  <div class="p-5">
+    <h3 class="font-serif text-xl text-brand group-hover:text-accent">
+      <a href="{{ $p.RelPermalink }}" class="after:absolute after:inset-0">{{ $p.Title }}</a>
+    </h3>
+    {{ with $p.Params.position }}<p class="mt-1 text-sm font-semibold text-accent">{{ . }}</p>{{ end }}
+    {{ with $p.Params.degree }}<p class="mt-1 text-sm text-neutral-500">{{ . }}</p>{{ end }}
+  </div>
+</article>

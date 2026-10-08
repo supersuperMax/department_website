@@ -1,0 +1,13 @@
+{{- /* Хлебные крошки. Параметры: dict "page" <страница> "dark" <bool — светлый текст на тёмном фоне> */ -}}
+{{- $page := .page -}}
+{{- if not $page.IsHome }}
+<nav aria-label="{{ i18n "breadcrumbs" }}" class="text-sm {{ if .dark }}text-white/60{{ else }}text-neutral-500{{ end }}">
+  <ol class="flex flex-wrap items-center gap-2">
+    {{- range $page.Ancestors.Reverse }}
+      <li><a href="{{ .RelPermalink }}" class="hover:underline {{ if $.dark }}hover:text-white{{ else }}hover:text-accent{{ end }}">{{ if .IsHome }}{{ i18n "home" }}{{ else }}{{ .LinkTitle }}{{ end }}</a></li>
+      <li aria-hidden="true">/</li>
+    {{- end }}
+    <li aria-current="page" class="{{ if .dark }}text-white/90{{ else }}text-neutral-800{{ end }}">{{ $page.LinkTitle }}</li>
+  </ol>
+</nav>
+{{- end }}

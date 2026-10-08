@@ -1,0 +1,15 @@
+{{- /* Страница мероприятия. Front matter: eventDate, eventEnd, location, registration (ссылка) */ -}}
+{{ define "main" }}
+  {{- $d := time.AsTime (.Params.eventDate | default .Date) -}}
+  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 lg:grid-cols-[1fr_20rem] lg:px-8">
+    <article class="prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-accent" data-animate="fade-up">{{ .Content }}</article>
+    <aside data-animate="slide-left">
+      <dl class="sticky top-32 space-y-4 border-t-4 border-accent bg-white p-6 shadow-sm">
+        <div><dt class="text-xs uppercase tracking-widest text-neutral-500">{{ i18n "date" }}</dt><dd class="mt-1 font-serif text-xl text-brand">{{ $d | time.Format site.Params.date_format }}, {{ $d | time.Format ":time_short" }}</dd></div>
+        {{ with .Params.eventEnd }}<div><dt class="text-xs uppercase tracking-widest text-neutral-500">{{ i18n "until" }}</dt><dd class="mt-1 text-brand">{{ time.AsTime . | time.Format site.Params.date_format }}</dd></div>{{ end }}
+        {{ with .Params.location }}<div><dt class="text-xs uppercase tracking-widest text-neutral-500">{{ i18n "location" }}</dt><dd class="mt-1 text-brand">{{ . }}</dd></div>{{ end }}
+        {{ with .Params.registration }}<a href="{{ . }}" class="block bg-accent px-5 py-3 text-center font-semibold text-white transition-colors hover:bg-brand">{{ i18n "register" }}</a>{{ end }}
+      </dl>
+    </aside>
+  </div>
+{{ end }}

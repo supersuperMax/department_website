@@ -1,0 +1,40 @@
+{{- /*
+  Страница новости. Обложка (cover.* в папке новости) выводится в page-hero.
+  Картинки из текста автоматически оптимизируются (layouts/_markup/render-image.html),
+  галерея — шорткод gallery (layouts/_shortcodes/gallery.html).
+*/ -}}
+{{ define "main" }}
+  <article class="mx-auto max-w-3xl px-4 py-14">
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-neutral-200 pb-6 text-sm text-neutral-500" data-animate="fade-in">
+      {{ if partials.Include "func/ShowDate.html" . }}
+        <time datetime="{{ .Date.Format "2006-01-02" }}" class="font-semibold uppercase tracking-wider text-accent">{{ .Date | time.Format site.Params.date_format }}</time>
+      {{ end }}
+      {{ with .Params.author }}<span>{{ i18n "by" }} <strong class="text-neutral-700">{{ if reflect.IsSlice . }}{{ delimit . ", " }}{{ else }}{{ . }}{{ end }}</strong></span>{{ end }}
+      <span>{{ i18n "readingTime" .ReadingTime }}</span>
+    </div>
+    <div class="prose prose-lg mt-10 max-w-none prose-headings:font-serif prose-headings:font-normal prose-headings:text-brand prose-a:text-accent" data-animate="fade-up">
+      {{- partials.Include "hook.html" (dict "hook" "content-before" "context" .) -}}
+      {{ .Content }}
+      {{- partials.Include "hook.html" (dict "hook" "content-after" "context" .) -}}
+    </div>
+    {{ with .GetTerms "tags" }}
+      <ul class="mt-12 flex flex-wrap gap-2">
+        {{ range . }}<li><a href="{{ .RelPermalink }}" class="inline-block bg-neutral-200 px-3 py-1 text-sm transition-colors hover:bg-accent hover:text-white">#{{ .LinkTitle }}</a></li>{{ end }}
+      </ul>
+    {{ end }}
+    <nav class="mt-14 grid gap-4 border-t border-neutral-200 pt-8 sm:grid-cols-2" aria-label="{{ i18n "moreNews" }}">
+      {{ with .NextInSection }}<a href="{{ .RelPermalink }}" class="group block"><span class="text-xs uppercase tracking-widest text-neutral-500">← {{ i18n "newer" }}</span><span class="mt-1 block font-serif text-lg text-brand group-hover:text-accent">{{ .Title }}</span></a>{{ else }}<span></span>{{ end }}
+      {{ with .PrevInSection }}<a href="{{ .RelPermalink }}" class="group block sm:text-right"><span class="text-xs uppercase tracking-widest text-neutral-500">{{ i18n "older" }} →</span><span class="mt-1 block font-serif text-lg text-brand group-hover:text-accent">{{ .Title }}</span></a>{{ end }}
+    </nav>
+  </article>
+  {{ with first 3 (site.RegularPages.Related .) }}
+    <section class="bg-white py-16">
+      <div class="mx-auto max-w-7xl px-4 lg:px-8">
+        <h2 class="font-serif text-3xl text-brand" data-animate="fade-up">{{ i18n "related" }}</h2>
+        <div class="mt-8 grid gap-8 md:grid-cols-3" data-stagger="120">
+          {{ range . }}<div data-animate="fade-up">{{ partials.Include "cards/news.html" (dict "page" .) }}</div>{{ end }}
+        </div>
+      </div>
+    </section>
+  {{ end }}
+{{ end }}

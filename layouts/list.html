@@ -1,0 +1,26 @@
+{{- /*
+  Раздел по умолчанию (about/, education/, research/ …): текст из _index.md
+  и сетка карточек дочерних страниц, отсортированных по weight.
+  Front matter раздела: cards = false — не показывать карточки.
+*/ -}}
+{{ define "main" }}
+  <div class="mx-auto max-w-7xl px-4 py-16 lg:px-8">
+    {{ with .Content }}
+      <div class="prose prose-lg max-w-4xl prose-headings:font-serif prose-headings:font-normal prose-headings:text-brand prose-a:text-accent" data-animate="fade-up">{{ . }}</div>
+    {{ end }}
+    {{ if ne .Params.cards false }}
+      <div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3" data-stagger="120">
+        {{ range .Pages.ByWeight }}
+          <a href="{{ .RelPermalink }}" class="group flex flex-col overflow-hidden bg-white shadow-sm ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" data-animate="fade-up">
+            {{ partials.Include "card-image.html" (dict "page" . "size" "800x450" "class" "aspect-[16/9]") }}
+            <div class="flex flex-1 flex-col border-t-4 border-transparent p-6 transition-colors group-hover:border-accent">
+              <h2 class="font-serif text-2xl text-brand group-hover:text-accent">{{ .LinkTitle }}</h2>
+              <p class="mt-3 text-neutral-600">{{ .Description | default (.Summary | plainify | truncate 140) }}</p>
+              <span class="mt-auto pt-4 font-semibold text-accent transition-transform group-hover:translate-x-1">{{ i18n "learnMore" }} →</span>
+            </div>
+          </a>
+        {{ end }}
+      </div>
+    {{ end }}
+  </div>
+{{ end }}

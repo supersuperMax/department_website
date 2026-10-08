@@ -1,0 +1,48 @@
+{{- /*
+  Заголовочный блок страницы в стиле ananke:
+    - если у страницы есть обложка (featured_image, images[0] или файл с «cover» или «feature» в имени
+      в page bundle — логика из themes/ananke/.../func/GetFeaturedImage.html),
+      выводится полноширинная картинка с затемнением;
+    - иначе — тёмная полоса bg-brand.
+  Front matter: hero_height = "sm" | "md" | "lg", omit_header_text = true, cover_dimming = 0..100
+*/ -}}
+{{- $img := partials.Include "func/GetFeaturedImage.html" . -}}
+{{- $res := partials.Include "func/GetFeaturedImageResource.html" . -}}
+{{- $heights := dict "sm" "min-h-[16rem]" "md" "min-h-[22rem] md:min-h-[28rem]" "lg" "min-h-[30rem] md:min-h-[38rem]" -}}
+{{- $height := index $heights (.Params.hero_height | default "md") -}}
+{{- $dim := .Params.cover_dimming | default 60 -}}
+
+{{ if $img }}
+  {{- $src := $img -}}
+  {{- $srcset := slice -}}
+  {{- if and $res (ne $res.MediaType.SubType "svg") -}}
+    {{- range slice 640 1280 1920 -}}
+      {{- if le . $res.Width -}}
+        {{- $r := $res.Resize (printf "%dx webp" .) -}}
+        {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink .) -}}
+        {{- $src = $r.RelPermalink -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end }}
+  <section class="relative isolate flex items-end overflow-hidden bg-brand text-white {{ $height }}">
+    <img src="{{ $src }}" {{ with $srcset }}srcset="{{ delimit . ", " }}" sizes="100vw"{{ end }} alt="" class="absolute inset-0 -z-10 h-full w-full animate-ken-burns object-cover" fetchpriority="high">
+    {{/* затемнение как bg-black-60 в ananke; сила задаётся cover_dimming */}}
+    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/60 to-black/20" style="opacity: {{ div (float $dim) 100 | add 0.25 | math.Min 1 }}"></div>
+    {{ if not .Params.omit_header_text }}
+      <div class="mx-auto w-full max-w-7xl px-4 pb-12 pt-24 lg:px-8">
+        {{ partials.Include "breadcrumbs.html" (dict "page" . "dark" true) }}
+        <h1 class="mt-4 max-w-4xl animate-fade-up font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl">{{ .Title }}</h1>
+        {{ with .Description }}<p class="mt-5 max-w-3xl animate-fade-up text-lg text-white/85 [animation-delay:.15s] md:text-xl">{{ . }}</p>{{ end }}
+      </div>
+    {{ end }}
+  </section>
+{{ else }}
+  <section class="relative overflow-hidden bg-brand text-white">
+    <div class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-accent/30 blur-3xl"></div>
+    <div class="relative mx-auto max-w-7xl px-4 py-14 lg:px-8 lg:py-20">
+      {{ partials.Include "breadcrumbs.html" (dict "page" . "dark" true) }}
+      <h1 class="mt-4 max-w-4xl animate-fade-up font-serif text-4xl leading-tight text-neutral-200 sm:text-5xl">{{ .Title }}</h1>
+      {{ with .Description }}<p class="mt-4 max-w-3xl animate-fade-up text-lg text-white/75 [animation-delay:.15s]">{{ . }}</p>{{ end }}
+    </div>
+  </section>
+{{ end }}

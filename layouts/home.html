@@ -1,0 +1,137 @@
+{{- /*
+  Главная страница в стиле mit.edu. Все тексты и слайды берутся из front matter
+  content/<lang>/_index.md:
+    hero:        список слайдов {image, title, text, link, link_text}
+                 (image — путь в assets/, например "images/hero/campus.jpg")
+    stats:       счётчики {value, suffix, label}
+    quicklinks:  плитки {title, text, link, image}
+  Тело _index.md выводится в блоке «О кафедре».
+*/ -}}
+
+{{ define "header" }}
+  {{- $slides := .Params.hero -}}
+  {{- if $slides }}
+  <section data-hero class="relative isolate h-[78vh] min-h-[30rem] overflow-hidden bg-brand text-white" aria-roledescription="carousel" aria-label="{{ site.Title }}">
+    {{- range $i, $s := $slides }}
+      <div class="hero-slide absolute inset-0" aria-hidden="{{ ne $i 0 }}" role="group" aria-roledescription="slide" aria-label="{{ add $i 1 }} / {{ len $slides }}">
+        {{- with resources.Get $s.image }}
+          {{- $small := .Resize "960x webp" }}{{ $large := .Resize "1920x webp" }}
+          <img src="{{ $large.RelPermalink }}" srcset="{{ $small.RelPermalink }} 960w, {{ $large.RelPermalink }} 1920w" sizes="100vw" alt="" class="hero-img absolute inset-0 h-full w-full object-cover" {{ if eq $i 0 }}fetchpriority="high"{{ else }}loading="lazy"{{ end }}>
+        {{- end }}
+        <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/50 to-black/10"></div>
+        <div class="relative mx-auto flex h-full max-w-7xl items-end px-4 pb-24 lg:px-8">
+          <div class="hero-text max-w-3xl">
+            <h2 class="font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl">{{ $s.title }}</h2>
+            {{ with $s.text }}<p class="mt-5 text-lg text-white/85 md:text-xl">{{ . }}</p>{{ end }}
+            {{ with $s.link }}{{ with site.GetPage . }}
+              <a href="{{ .RelPermalink }}" class="group mt-8 inline-flex items-center gap-3 bg-accent px-7 py-3.5 font-semibold transition-colors hover:bg-white hover:text-brand">
+                {{ $s.link_text | default (i18n "explore") }} <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+              </a>
+            {{ end }}{{ end }}
+          </div>
+        </div>
+      </div>
+    {{- end }}
+    {{- if gt (len $slides) 1 }}
+      <div class="absolute inset-x-0 bottom-8 mx-auto flex max-w-7xl items-center justify-between px-4 lg:px-8">
+        <div class="flex gap-2">
+          {{- range $i, $s := $slides }}
+            <button type="button" class="hero-dot h-1.5 w-6 bg-white/40 transition-all duration-500 hover:bg-white/80" aria-current="{{ eq $i 0 }}" aria-label="{{ add $i 1 }}"></button>
+          {{- end }}
+        </div>
+        <div class="flex gap-2">
+          <button type="button" data-hero-prev class="grid h-11 w-11 place-items-center ring-1 ring-white/40 transition hover:bg-white hover:text-brand" aria-label="{{ i18n "prev" }}">←</button>
+          <button type="button" data-hero-next class="grid h-11 w-11 place-items-center ring-1 ring-white/40 transition hover:bg-white hover:text-brand" aria-label="{{ i18n "next" }}">→</button>
+        </div>
+      </div>
+    {{- end }}
+  </section>
+  {{- end }}
+{{ end }}
+
+{{ define "main" }}
+  {{/* --- Счётчики ---------------------------------------------------- */}}
+  {{ with .Params.stats }}
+  <section class="border-b border-neutral-200 bg-white">
+    <dl class="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 lg:grid-cols-4 lg:px-8" data-stagger="120">
+      {{ range . }}
+        <div class="flex flex-col px-4 py-10 text-center" data-animate="fade-up">
+          <dt class="order-2 mt-2 text-sm uppercase tracking-widest text-neutral-500">{{ .label }}</dt>
+          <dd class="font-serif text-5xl text-accent" data-count-to="{{ .value }}" data-suffix="{{ .suffix }}">{{ .value }}{{ .suffix }}</dd>
+        </div>
+      {{ end }}
+    </dl>
+  </section>
+  {{ end }}
+
+  {{/* --- Новости ----------------------------------------------------- */}}
+  {{- $newsSection := site.GetPage "/news" -}}
+  {{- $news := where site.RegularPages "Section" "in" site.Params.mainSections -}}
+  {{ with $news }}
+  <section class="mx-auto max-w-7xl px-4 py-20 lg:px-8">
+    <div class="flex items-end justify-between gap-4" data-animate="fade-up">
+      <h2 class="font-serif text-4xl text-brand md:text-5xl">{{ i18n "latestNews" }}</h2>
+      {{ with $newsSection }}<a href="{{ .RelPermalink }}" class="link-underline shrink-0 font-semibold text-accent">{{ i18n "allNews" }} →</a>{{ end }}
+    </div>
+    <div class="mt-10 grid gap-8 lg:grid-cols-3">
+      {{ range first 1 . }}
+        <div class="lg:col-span-2 lg:row-span-2" data-animate="fade-up">{{ partials.Include "cards/news.html" (dict "page" . "featured" true) }}</div>
+      {{ end }}
+      {{ range $i, $p := after 1 . | first 2 }}
+        <div data-animate="slide-left" data-delay="{{ mul (add $i 1) 150 }}">{{ partials.Include "cards/news.html" (dict "page" $p) }}</div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{/* --- Быстрые ссылки ---------------------------------------------- */}}
+  {{ with .Params.quicklinks }}
+  <section class="bg-brand py-20 text-white">
+    <div class="mx-auto max-w-7xl px-4 lg:px-8">
+      <h2 class="font-serif text-4xl md:text-5xl" data-animate="fade-up">{{ i18n "explore" }}</h2>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-stagger="120">
+        {{ range . }}
+          {{ $target := site.GetPage .link }}
+          <a href="{{ with $target }}{{ .RelPermalink }}{{ end }}" class="group relative block aspect-[3/4] overflow-hidden" data-animate="zoom-in">
+            {{ with resources.Get .image }}{{ $img := .Fill "600x800 webp Smart" }}
+              <img src="{{ $img.RelPermalink }}" alt="" loading="lazy" class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110">
+            {{ end }}
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-colors duration-500 group-hover:from-accent/95"></div>
+            <div class="absolute inset-x-0 bottom-0 p-6">
+              <h3 class="font-serif text-2xl">{{ .title }}</h3>
+              <p class="mt-2 max-h-0 overflow-hidden text-sm text-white/85 opacity-0 transition-all duration-500 group-hover:max-h-40 group-hover:opacity-100 group-focus-visible:max-h-40 group-focus-visible:opacity-100">{{ .text }}</p>
+              <span class="mt-3 inline-block transition-transform group-hover:translate-x-2" aria-hidden="true">→</span>
+            </div>
+          </a>
+        {{ end }}
+      </div>
+    </div>
+  </section>
+  {{ end }}
+
+  {{/* --- О кафедре + мероприятия ------------------------------------- */}}
+  <section class="mx-auto grid max-w-7xl gap-16 px-4 py-20 lg:grid-cols-5 lg:px-8">
+    <div class="lg:col-span-3" data-animate="fade-up">
+      <h2 class="font-serif text-4xl text-brand md:text-5xl">{{ i18n "aboutDepartment" }}</h2>
+      <div class="prose prose-lg mt-6 max-w-none prose-a:text-accent">{{ .Content }}</div>
+      {{ with site.GetPage "/about" }}<a href="{{ .RelPermalink }}" class="mt-6 inline-block border-2 border-brand px-6 py-3 font-semibold text-brand transition-colors hover:bg-brand hover:text-white">{{ i18n "learnMore" }}</a>{{ end }}
+    </div>
+    {{- $events := where site.RegularPages "Section" "events" -}}
+    {{ with $events }}
+      {{- $upcoming := slice -}}
+      {{- range sort . "Params.eventDate" "asc" -}}
+        {{- if ge (time.AsTime (.Params.eventDate | default .Date)) now -}}{{ $upcoming = $upcoming | append . }}{{- end -}}
+      {{- end -}}
+      {{- $list := cond (gt (len $upcoming) 0) $upcoming (sort . "Params.eventDate" "desc") -}}
+      <div class="lg:col-span-2" data-animate="slide-left">
+        <div class="flex items-end justify-between">
+          <h2 class="font-serif text-3xl text-brand">{{ if $upcoming }}{{ i18n "upcomingEvents" }}{{ else }}{{ i18n "events" }}{{ end }}</h2>
+          {{ with site.GetPage "/events" }}<a href="{{ .RelPermalink }}" class="link-underline text-sm font-semibold text-accent">{{ i18n "allEvents" }} →</a>{{ end }}
+        </div>
+        <div class="mt-6 space-y-4">
+          {{ range first 3 $list }}{{ partials.Include "cards/event.html" (dict "page" .) }}{{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </section>
+{{ end }}
