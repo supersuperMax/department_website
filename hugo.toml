@@ -1,5 +1,5 @@
 # =============================================================================
-#  Сайт кафедры МГУ — конфигурация Hugo
+#  Сайт кафедры — конфигурация Hugo
 #  Тема: ananke (git-подмодуль, не редактируется) + переопределения в layouts/
 #  Стили: Tailwind CSS v4 (assets/css/main.css), Tachyons из ananke отключён
 #  Хостинг: GitHub Pages (baseURL подменяется в CI, см. .github/workflows/hugo.yaml)
@@ -8,7 +8,7 @@
 # Заглушка. В GitHub Actions передаётся --baseURL из actions/configure-pages,
 # поэтому сайт работает и как https://<user>.github.io/, и как https://<user>.github.io/<repo>/.
 # ВАЖНО: в шаблонах используйте только .RelPermalink / relURL — без ссылок, начинающихся с "/".
-baseURL = 'https://example.github.io/department_website/'
+baseURL = 'https://supersuperMax.github.io/department_website/'
 theme = 'ananke'
 title = 'Кафедра … МГУ'
 enableRobotsTXT = true
