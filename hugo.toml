@@ -273,6 +273,8 @@ defaultContentLanguageInSubdir = false
   # Логотип (путь от static/ или assets/). Пусто — выводится текстовое название.
   site_logo = ''
   university_url = 'https://www.msu.ru'
+  # Строка «© <год> <университет>» в подвале. Скрыта, пока сайт в разработке.
+  show_copyright = false
   # Ссылка «Поступающим» в верхней полосе
   admissions_page = '/education'
 
