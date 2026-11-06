@@ -27,10 +27,10 @@ defaultContentLanguageInSubdir = false
     locale = 'ru-RU'
     label = 'Русский'
     weight = 1
-    title = 'Кафедра … МГУ'
+    title = 'Кафедра теории пластичности МГУ'
     [languages.ru.params]
-      description = 'Кафедра … Московского государственного университета имени М. В. Ломоносова'
-      department_short = 'Кафедра …'
+      description = 'Кафедра теории пластичности Московского государственного университета имени М. В. Ломоносова'
+      department_short = 'Кафедра теории пластичности'
       university = 'МГУ имени М. В. Ломоносова'
       address = '119991, Москва, Ленинские горы, д. 1'
       email = 'info@example.msu.ru'
@@ -153,16 +153,12 @@ defaultContentLanguageInSubdir = false
     pageRef = '/about'
     weight = 1
   [[languages.ru.menus.footer]]
-    name = 'Образование'
-    pageRef = '/education'
+    name = 'Сотрудники'
+    pageRef = '/people'
     weight = 2
   [[languages.ru.menus.footer]]
     name = 'Наука'
     pageRef = '/research'
-    weight = 3
-  [[languages.ru.menus.footer]]
-    name = 'Сотрудники'
-    pageRef = '/people'
     weight = 4
   [[languages.ru.menus.footer]]
     name = 'Новости'

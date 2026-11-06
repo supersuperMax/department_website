@@ -44,3 +44,6 @@ one = "{{ .Count }} минута чтения"
 few = "{{ .Count }} минуты чтения"
 many = "{{ .Count }} минут чтения"
 other = "{{ .Count }} минут чтения"
+
+[istina]
+other = "Истина"

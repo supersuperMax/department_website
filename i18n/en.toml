@@ -42,3 +42,6 @@ notFound = "Page not found"
 [readingTime]
 one = "{{ .Count }} min read"
 other = "{{ .Count }} min read"
+
+[istina]
+other = "Istina"

@@ -23,45 +23,46 @@ description = 'Кафедра … Московского государстве�
   link_text = 'Читать новость'
 
 # Счётчики под слайдером
-[[stats]]
-  value = 75
-  suffix = '+'
-  label = 'лет истории'
-[[stats]]
-  value = 40
-  label = 'преподавателей'
-[[stats]]
-  value = 350
-  label = 'студентов'
-[[stats]]
-  value = 120
-  suffix = '+'
-  label = 'публикаций в год'
+#[[stats]]
+#  value = 75
+#  suffix = '+'
+#  label = 'лет истории'
+#[[stats]]
+#  value = 40
+#  label = 'преподавателей'
+#[[stats]]
+#  value = 350
+#  label = 'студентов'
+#[[stats]]
+#  value = 120
+#  suffix = '+'
+#  label = 'публикаций в год'
+
 
 # Плитки быстрых ссылок
-[[quicklinks]]
-  title = 'Образование'
-  text = 'Бакалавриат, магистратура и аспирантура.'
-  link = '/education'
-  image = 'images/tiles/education.jpg'
-[[quicklinks]]
-  title = 'Наука'
-  text = 'Научные направления, лаборатории и проекты.'
-  link = '/research'
-  image = 'images/tiles/research.jpg'
-[[quicklinks]]
-  title = 'Поступающим'
-  text = 'Как поступить и чему вы научитесь.'
-  link = '/education/bachelor'
-  image = 'images/tiles/admissions.jpg'
-[[quicklinks]]
-  title = 'Сотрудники'
-  text = 'Преподаватели и научные сотрудники кафедры.'
-  link = '/people'
-  image = 'images/tiles/people.jpg'
+#[[quicklinks]]
+#  title = 'Образование'
+#  text = 'Бакалавриат, магистратура и аспирантура.'
+#  link = '/education'
+#  image = 'images/tiles/education.jpg'
+#[[quicklinks]]
+#  title = 'Наука'
+#  text = 'Научные направления, лаборатории и проекты.'
+#  link = '/research'
+#  image = 'images/tiles/research.jpg'
+#[[quicklinks]]
+#  title = 'Поступающим'
+#  text = 'Как поступить и чему вы научитесь.'
+#  link = '/education/bachelor'
+#  image = 'images/tiles/admissions.jpg'
+#[[quicklinks]]
+#  title = 'Сотрудники'
+#  text = 'Преподаватели и научные сотрудники кафедры.'
+#  link = '/people'
+#  image = 'images/tiles/people.jpg'
 +++
-Кафедра … была основана в 19.. году и сегодня объединяет ведущих специалистов в области … .
-Мы готовим бакалавров, магистров и кандидатов наук, ведём фундаментальные и прикладные
-исследования и сотрудничаем с университетами и компаниями по всему миру.
 
-*Замените этот текст в файле `content/_index.ru.md`.*
+<!-- # О КАФЕДРЕ -->
+Кафедра теории пластичности была создана в 1953 году Юрием Николаевичем Работновым. Причиной, вызвавшей создание новой кафедры, стала потребность в более детальном, углубленном изучении механических свойств новых материалов… 
+
+<!-- *Замените этот текст в файле `content/_index.ru.md`.* -->

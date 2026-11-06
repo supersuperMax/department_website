@@ -1,12 +1,36 @@
 {{- /* Карточка сотрудника. Front matter: position, degree, email; фото — файл cover.jpg в папке сотрудника или featured_image */ -}}
+
 {{- $p := .page -}}
-<article class="group relative overflow-hidden bg-white text-center shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-xl">
-  {{ partials.Include "card-image.html" (dict "page" $p "size" "600x700" "class" "aspect-[6/7]") }}
-  <div class="p-5">
-    <h3 class="font-serif text-xl text-brand group-hover:text-accent">
+<article class="group relative flex flex-col sm:flex-row gap-8 overflow-hidden bg-white p-6 shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-xl">
+  
+  <!-- Левая колонка: Фото, ФИО, должность и степень -->
+  <div class="shrink-0 flex flex-col items-center w-full sm:w-48">
+    <!-- Увеличенный размер фото (до w-40/h-40 или w-48/h-48) -->
+    {{ partials.Include "card-image.html" (dict "page" $p "size" "300x300" "class" "w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-sm") }}
+    
+    <h3 class="mt-5 font-serif text-lg font-bold text-gray-900 text-center leading-snug group-hover:text-gray-600">
       <a href="{{ $p.RelPermalink }}" class="after:absolute after:inset-0">{{ $p.Title }}</a>
     </h3>
-    {{ with $p.Params.position }}<p class="mt-1 text-sm font-semibold text-accent">{{ . }}</p>{{ end }}
-    {{ with $p.Params.degree }}<p class="mt-1 text-sm text-neutral-500">{{ . }}</p>{{ end }}
+    
+    {{ with $p.Params.position }}
+      <!-- Должность выделена красным цветом (text-accent) -->
+      <p class="mt-2 text-sm font-semibold text-accent text-center">{{ . }}</p>
+    {{ end }}
+    
+    {{ with $p.Params.degree }}
+      <p class="mt-1 text-xs text-gray-500 text-center">{{ . }}</p>
+    {{ end }}
   </div>
+  
+  <!-- Правая колонка: Краткая биография -->
+  <div class="flex-1 sm:text-left mt-2 sm:mt-0 relative z-10 pointer-events-none">
+  <div class="text-gray-600 text-sm sm:text-base leading-relaxed prose prose-sm max-w-none">
+    {{ if $p.Params.summary }}
+      {{ $p.Params.summary | markdownify }}
+    {{ else }}
+      {{ $p.Summary | truncate 250 }}
+    {{ end }}
+  </div>
+</div>
+  
 </article>

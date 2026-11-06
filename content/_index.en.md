@@ -21,41 +21,6 @@ description = 'Department of … at Lomonosov Moscow State University'
   link = '/news/summer-school'
   link_text = 'Read the story'
 
-[[stats]]
-  value = 75
-  suffix = '+'
-  label = 'years of history'
-[[stats]]
-  value = 40
-  label = 'faculty members'
-[[stats]]
-  value = 350
-  label = 'students'
-[[stats]]
-  value = 120
-  suffix = '+'
-  label = 'papers per year'
-
-[[quicklinks]]
-  title = 'Education'
-  text = 'Bachelor, Master and PhD programmes.'
-  link = '/education'
-  image = 'images/tiles/education.jpg'
-[[quicklinks]]
-  title = 'Research'
-  text = 'Research areas, laboratories and projects.'
-  link = '/research'
-  image = 'images/tiles/research.jpg'
-[[quicklinks]]
-  title = 'Admissions'
-  text = 'How to apply and what you will learn.'
-  link = '/education/bachelor'
-  image = 'images/tiles/admissions.jpg'
-[[quicklinks]]
-  title = 'People'
-  text = 'Faculty and research staff.'
-  link = '/people'
-  image = 'images/tiles/people.jpg'
 +++
 The Department of … was founded in 19.. and today brings together leading experts in … .
 We train Bachelor, Master and PhD students, carry out fundamental and applied research,

@@ -4,21 +4,51 @@
     <div class="mx-auto max-w-7xl px-4 py-8 lg:px-8">{{ partials.Include "breadcrumbs.html" (dict "page" . "dark" true) }}</div>
   </section>
 {{ end }}
+
 {{ define "main" }}
   <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 md:grid-cols-[18rem_1fr] lg:px-8">
-    <aside data-animate="fade-up">
-      {{ partials.Include "card-image.html" (dict "page" . "size" "600x700" "class" "aspect-[6/7] shadow-lg") }}
-      <dl class="mt-6 space-y-3 text-sm">
+    
+    <aside data-animate="fade-up" class="flex flex-col items-center md:block">
+      {{ partials.Include "card-image.html" (dict "page" . "size" "600x700" "class" "w-48 h-48 md:w-full md:h-auto md:aspect-[6/7] object-cover rounded-full md:rounded-xl shadow-xl/25") }}
+      
+      <!-- ДЕСКТОП: Истина (скрыта на мобильных экранах) -->
+      {{ with .Params.istina }}
+        <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="hidden md:block mt-4 w-full text-center font-medium text-accent hover:opacity-80 transition-opacity">
+          {{ i18n "istina" }}
+        </a>
+      {{ end }}
+
+      <!-- МОБИЛЬНАЯ ВЕРСИЯ: ФИО, должность, степень, Истина (скрыты на десктопе) -->
+      <div class="md:hidden mt-6 flex flex-col items-center text-center">
+        <h1 class="font-serif text-3xl text-brand">{{ .Title }}</h1>
+        {{ with .Params.position }}<p class="mt-2 text-lg font-semibold text-accent">{{ . }}</p>{{ end }}
+        {{ with .Params.degree }}<p class="mt-1 text-neutral-500">{{ . }}</p>{{ end }}
+        {{ with .Params.istina }}
+          <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="mt-4 font-medium text-accent hover:opacity-80 transition-opacity">
+            {{ i18n "istina" }}
+          </a>
+        {{ end }}
+      </div>
+
+      <!-- Контакты -->
+      <dl class="mt-8 md:mt-6 space-y-3 text-sm w-full">
         {{ with .Params.email }}<div><dt class="text-neutral-500">Email</dt><dd><a href="mailto:{{ . }}" class="text-accent hover:underline">{{ . }}</a></dd></div>{{ end }}
         {{ with .Params.phone }}<div><dt class="text-neutral-500">{{ i18n "phone" }}</dt><dd>{{ . }}</dd></div>{{ end }}
         {{ with .Params.room }}<div><dt class="text-neutral-500">{{ i18n "room" }}</dt><dd>{{ . }}</dd></div>{{ end }}
       </dl>
     </aside>
+
     <article data-animate="fade-up" data-delay="150">
-      <h1 class="font-serif text-4xl text-brand md:text-5xl">{{ .Title }}</h1>
-      {{ with .Params.position }}<p class="mt-3 text-lg font-semibold text-accent">{{ . }}</p>{{ end }}
-      {{ with .Params.degree }}<p class="mt-1 text-neutral-500">{{ . }}</p>{{ end }}
-      <div class="prose prose-lg mt-8 max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-accent">{{ .Content }}</div>
+      <!-- ДЕСКТОП: ФИО, должность, степень (скрыты на мобильных экранах) -->
+      <div class="hidden md:block">
+        <h1 class="font-serif text-4xl text-brand md:text-5xl">{{ .Title }}</h1>
+        {{ with .Params.position }}<p class="mt-3 text-lg font-semibold text-accent">{{ . }}</p>{{ end }}
+        {{ with .Params.degree }}<p class="mt-1 text-neutral-500">{{ . }}</p>{{ end }}
+      </div>
+      
+      <!-- Биография -->
+      <div class="prose prose-lg mt-2 md:mt-8 max-w-none prose-headings:font-serif prose-headings:font-normal prose-a:text-accent">{{ .Content }}</div>
     </article>
+    
   </div>
 {{ end }}
