@@ -92,14 +92,9 @@ defaultContentLanguageInSubdir = false
     weight = 1
   [[languages.ru.menus.main]]
     parent = 'about'
-    name = 'История'
-    pageRef = '/about/history'
-    weight = 2
-  [[languages.ru.menus.main]]
-    parent = 'about'
     name = 'Контакты'
     pageRef = '/contacts'
-    weight = 3
+    weight = 2
 
   [[languages.ru.menus.main]]
     identifier = 'education'
@@ -108,40 +103,35 @@ defaultContentLanguageInSubdir = false
     weight = 20
   [[languages.ru.menus.main]]
     parent = 'education'
-    name = 'Бакалавриат'
-    pageRef = '/education/bachelor'
+    name = 'Расписание'
+    pageRef = '/education/scedule'
     weight = 1
   [[languages.ru.menus.main]]
     parent = 'education'
-    name = 'Магистратура'
-    pageRef = '/education/master'
+    name = 'Интересное'
+    pageRef = '/education/interesting'
     weight = 2
-  [[languages.ru.menus.main]]
-    parent = 'education'
-    name = 'Аспирантура'
-    pageRef = '/education/phd'
-    weight = 3
+#  [[languages.ru.menus.main]]
+#    parent = 'education'
+#    name = 'Аспирантура'
+#    pageRef = '/education/phd'
+#    weight = 3
 
-  [[languages.ru.menus.main]]
-    identifier = 'research'
-    name = 'Наука'
-    pageRef = '/research'
-    weight = 30
   [[languages.ru.menus.main]]
     identifier = 'people'
     name = 'Сотрудники'
     pageRef = '/people'
-    weight = 40
-  [[languages.ru.menus.main]]
-    identifier = 'news'
-    name = 'Новости'
-    pageRef = '/news'
-    weight = 50
+    weight = 30
+#  [[languages.ru.menus.main]]
+#    identifier = 'news'
+#    name = 'Новости'
+#    pageRef = '/news'
+#    weight = 40
   [[languages.ru.menus.main]]
     identifier = 'events'
     name = 'Мероприятия'
     pageRef = '/events'
-    weight = 60
+    weight = 50
   [[languages.ru.menus.main]]
     identifier = 'contacts'
     name = 'Контакты'
@@ -157,13 +147,13 @@ defaultContentLanguageInSubdir = false
     pageRef = '/people'
     weight = 2
   [[languages.ru.menus.footer]]
-    name = 'Наука'
-    pageRef = '/research'
+    name = 'Образование'
+    pageRef = '/education'
     weight = 4
-  [[languages.ru.menus.footer]]
-    name = 'Новости'
-    pageRef = '/news'
-    weight = 5
+#  [[languages.ru.menus.footer]]
+#    name = 'Новости'
+#    pageRef = '/news'
+#    weight = 5
   [[languages.ru.menus.footer]]
     name = 'Мероприятия'
     pageRef = '/events'
@@ -272,7 +262,7 @@ defaultContentLanguageInSubdir = false
   # Строка «© <год> <университет>» в подвале. Скрыта, пока сайт в разработке.
   show_copyright = false
   # Ссылка «Поступающим» в верхней полосе
-  admissions_page = '/education'
+  admissions_page = '/education/interesting'
 
   [params.animations]
     enable = true           # глобальный выключатель всех анимаций

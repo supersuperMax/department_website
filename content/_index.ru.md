@@ -4,15 +4,15 @@ description = 'Кафедра … Московского государстве�
 
 # Слайды на главной. image — путь в папке assets/, link — путь страницы в content/
 [[hero]]
-  image = 'images/hero/hero-1.jpg'
+  image = 'images/hero/evgeniy-ivanov-QaEUv.jpg'
   title = 'Наука, которая меняет мир'
-  text = 'Кафедра … МГУ — исследования мирового уровня и образование для будущих лидеров.'
+  text = 'Кафедра теории пластичности - (пока не придумал).'
   link = '/about'
   link_text = 'О кафедре'
 [[hero]]
-  image = 'images/hero/hero-2.jpg'
-  title = 'Поступайте к нам'
-  text = 'Программы бакалавриата, магистратуры и аспирантуры.'
+  image = 'images/hero/rjcm-1-Moscow.jpg'
+  title = 'Сотрудничество с Китаем'
+  text = 'Программы обмена и двойной аспирантуры.'
   link = '/education'
   link_text = 'Образование'
 [[hero]]
