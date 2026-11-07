@@ -32,7 +32,7 @@ defaultContentLanguageInSubdir = false
       description = 'Кафедра теории пластичности Московского государственного университета имени М. В. Ломоносова'
       department_short = 'Кафедра теории пластичности'
       university = 'МГУ имени М. В. Ломоносова'
-      address = '119991, Москва, Ленинские горы, д. 1'
+      address = '119991, Москва, Ленинские горы, д.1'
       email = 'info@example.msu.ru'
       phone = '+7 (495) 000-00-00'
       date_format = '2 January 2006'
@@ -95,6 +95,11 @@ defaultContentLanguageInSubdir = false
     name = 'Контакты'
     pageRef = '/contacts'
     weight = 2
+  [[languages.ru.menus.main]]
+    parent = 'about'
+    name = 'Сотрудничество с Китаем'
+    pageRef = '/research/china-partnership'
+    weight = 3
 
   [[languages.ru.menus.main]]
     identifier = 'education'
@@ -262,7 +267,7 @@ defaultContentLanguageInSubdir = false
   # Строка «© <год> <университет>» в подвале. Скрыта, пока сайт в разработке.
   show_copyright = false
   # Ссылка «Поступающим» в верхней полосе
-  admissions_page = '/education/interesting'
+  admissions_page = '/education'
 
   [params.animations]
     enable = true           # глобальный выключатель всех анимаций

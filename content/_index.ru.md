@@ -12,9 +12,9 @@ description = 'Кафедра … Московского государстве�
 [[hero]]
   image = 'images/hero/rjcm-1-Moscow.jpg'
   title = 'Сотрудничество с Китаем'
-  text = 'Программы обмена и двойной аспирантуры.'
-  link = '/education'
-  link_text = 'Образование'
+  text = 'P.S. на фото Японцы'
+  link = '/research/china-partnership'
+  link_text = 'Подробнее'
 [[hero]]
   image = 'images/hero/hero-3.jpg'
   title = 'Летняя школа 2026'
