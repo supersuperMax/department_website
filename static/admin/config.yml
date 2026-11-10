@@ -9,6 +9,7 @@ backend:
   repo: supersuperMax/department_website
   branch: main
   app_id: Ov23lixxoJoWosY6gCli
+  auth_type: pkce
 
 # Глобальная папка для медиа (например, для страниц сотрудников)
 media_folder: "static/images/uploads"
