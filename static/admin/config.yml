@@ -1,0 +1,44 @@
+# 1. Настройка мультиязычности (создает файлы .ru.md и .en.md)
+i18n:
+  structure: multiple_files
+  locales: [ru, en]
+  default_locale: ru
+
+backend:
+  name: github
+  repo: supersuperMax/department_website
+  branch: main
+  app_id: Ov23lixxoJoWosY6gCli
+
+# Глобальная папка для медиа (например, для страниц сотрудников)
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "news"
+    label: "Новости"
+    folder: "content/news"
+    # 2. Настройка папок (Page Bundles) вместо плоских файлов
+    path: "{{slug}}/index"
+    media_folder: ""
+    public_folder: ""
+    create: true
+    extension: "md"
+    format: "toml-frontmatter"
+    i18n: true # Включает переводы для этой коллекции
+    fields:
+      - { label: "Заголовок", name: "title", widget: "string", i18n: true }
+      - { label: "Описание", name: "description", widget: "string", required: false, i18n: true }
+      - { label: "Дата", name: "date", widget: "datetime", i18n: duplicate }
+      
+      # 1. Отвязываем статус черновика от других языков (i18n: true вместо duplicate)
+      - { label: "Черновик", name: "draft", widget: "boolean", default: true, i18n: true }
+      
+      # 2. Новое поле для загрузки обложки (сохранится в папку новости)
+      - { label: "Обложка", name: "featured_image", widget: "image", required: false, i18n: duplicate }
+      
+      - { label: "Затемнение обложки", name: "cover_dimming", widget: "number", required: false, value_type: "int", default: 60, i18n: duplicate }
+      - { label: "Автор", name: "author", widget: "string", required: false, i18n: true }
+      - { label: "Категории", name: "categories", widget: "list", default: ["Новости"], i18n: true }
+      - { label: "Теги", name: "tags", widget: "list", required: false, i18n: true }
+      - { label: "Текст новости", name: "body", widget: "markdown", i18n: true }

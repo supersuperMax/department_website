@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Панель управления сайтом</title>
+  <link href="config.yml" type="text/yaml" rel="cms-config-url">
+</head>
+<body>
+  <!-- 1. Загружаем ядро CMS -->
+  <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+
+  <!-- 2. Регистрируем пользовательские шорткоды для Hugo -->
+  <script>
+    // Ждем инициализации CMS
+    window.addEventListener('load', function() {
+      if (typeof CMS === 'undefined') return;
+
+      // Компонент: Вводный текст (Lead)
+      CMS.registerEditorComponent({
+        id: "lead",
+        label: "Вводный текст (Lead)",
+        // То, что увидит пользователь в форме:
+        fields: [{ name: "text", label: "Текст", widget: "text" }],
+        // Регулярное выражение для поиска шорткода в существующем Markdown
+        pattern: /^{{<\s*lead\s*>}}(.*?){{<\s*\/lead\s*>}}$/ms,
+        // Как извлечь данные из найденного шорткода
+        fromBlock: function(match) {
+          return { text: match[1] };
+        },
+        // Как собрать шорткод при сохранении новости
+        toBlock: function(obj) {
+          return `{{< lead >}}\n${obj.text || ''}\n{{< /lead >}}`;
+        },
+        // (Опционально) как это выглядит в предпросмотре админки
+        toPreview: function(obj) {
+          return `<div style="font-size: 1.2em; font-weight: bold;">${obj.text}</div>`;
+        }
+      });
+
+      // Компонент: Галерея (Gallery)
+      CMS.registerEditorComponent({
+        id: "gallery",
+        label: "Галерея",
+        fields: [
+          { 
+            name: "match", 
+            label: "Путь к картинкам", 
+            widget: "string", 
+            default: "gallery/*",
+            hint: "Оставьте gallery/*, если собираетесь загрузить фото в подпапку gallery" 
+          }
+        ],
+        pattern: /^{{<\s*gallery\s+match="([^"]+)"\s*>}}$/m,
+        fromBlock: function(match) {
+          return { match: match[1] };
+        },
+        toBlock: function(obj) {
+          return `{{< gallery match="${obj.match || 'gallery/*'}" >}}`;
+        },
+        toPreview: function(obj) {
+          return `<div style="padding: 1rem; background: #eee; border: 1px dashed #ccc;">[Блок галереи: ${obj.match}]</div>`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
