@@ -45,3 +45,6 @@ other = "{{ .Count }} min read"
 
 [istina]
 other = "Istina"
+
+[read_more]
+other = "Read more"

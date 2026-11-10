@@ -1,36 +1,44 @@
 {{- /* Карточка сотрудника. Front matter: position, degree, email; фото — файл cover.jpg в папке сотрудника или featured_image */ -}}
-
 {{- $p := .page -}}
 <article class="group relative flex flex-col sm:flex-row gap-8 overflow-hidden bg-white p-6 shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-xl">
   
   <!-- Левая колонка: Фото, ФИО, должность и степень -->
   <div class="shrink-0 flex flex-col items-center w-full sm:w-48">
-    <!-- Увеличенный размер фото (до w-40/h-40 или w-48/h-48) -->
-    {{ partials.Include "card-image.html" (dict "page" $p "size" "300x300" "class" "w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover shadow-sm") }}
+    {{ partials.Include "card-image.html" (dict "page" $p "size" "600x700 smart" "class" "w-40 h-40 object-cover object-center rounded-full shadow-sm shrink-0") }}
     
-    <h3 class="mt-5 font-serif text-lg font-bold text-gray-900 text-center leading-snug group-hover:text-gray-600">
+    <h3 class="mt-5 font-serif text-lg font-bold text-brand text-center leading-snug group-hover:text-accent transition-colors duration-300">
       <a href="{{ $p.RelPermalink }}" class="after:absolute after:inset-0">{{ $p.Title }}</a>
     </h3>
     
     {{ with $p.Params.position }}
-      <!-- Должность выделена красным цветом (text-accent) -->
       <p class="mt-2 text-sm font-semibold text-accent text-center">{{ . }}</p>
     {{ end }}
     
     {{ with $p.Params.degree }}
-      <p class="mt-1 text-xs text-gray-500 text-center">{{ . }}</p>
+      <p class="mt-1 text-xs text-neutral-500 text-center">{{ . }}</p>
     {{ end }}
   </div>
   
-  <!-- Правая колонка: Краткая биография -->
-  <div class="flex-1 sm:text-left mt-2 sm:mt-0 relative z-10 pointer-events-none">
-  <div class="text-gray-600 text-sm sm:text-base leading-relaxed prose prose-sm max-w-none">
-    {{ if $p.Params.summary }}
-      {{ $p.Params.summary | markdownify }}
-    {{ else }}
-      {{ $p.Summary | truncate 250 }}
-    {{ end }}
+  <!-- Правая колонка: Краткая биография и стрелка -->
+  <div class="flex-1 flex flex-col sm:text-left mt-2 sm:mt-0 relative z-10 pointer-events-none">
+    
+    <!-- Текст биографии (занимает доступное место, отталкивая кнопку вниз) -->
+    <div class="text-gray-600 text-sm sm:text-base leading-relaxed prose prose-sm max-w-none flex-1 mb-4">
+      {{ if $p.Params.summary }}
+        {{ $p.Params.summary | markdownify }}
+      {{ else }}
+        {{ $p.Summary | truncate 250 }}
+      {{ end }}
+    </div>
+    
+    <!-- Анимированная надпись и стрелка (используется цвет accent) -->
+    <div class="flex items-center justify-end text-accent font-medium opacity-0 -translate-x-4 motion-reduce:translate-x-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
+      <span class="mr-2">{{ i18n "read_more" }}</span>
+      <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300 motion-reduce:transform-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+      </svg>
+    </div>
+    
   </div>
-</div>
   
 </article>
