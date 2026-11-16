@@ -26,6 +26,7 @@
 9. [Стили и шаблоны](#9-стили-и-шаблоны)
 10. [Публикация на GitHub Pages](#10-публикация-на-github-pages)
 11. [Частые проблемы](#11-частые-проблемы)
+12. [Шорткоды](#12-шорткоды)
 
 ---
 
@@ -77,7 +78,7 @@ layouts/                   ← шаблоны, которые переопред
   single.html, list.html   ← обычная страница и раздел
   news/, events/, people/  ← шаблоны отдельных разделов
   _partials/               ← шапка, подвал, карточки, hero …
-  _shortcodes/             ← gallery, button, lead
+  _shortcodes/             ← gallery, button, lead, schedule, collapse
   _markup/render-image.html← обработка картинок из Markdown
 archetypes/                ← заготовки для `hugo new`
 static/                    ← файлы «как есть» (favicon, pdf …)
@@ -217,12 +218,7 @@ hugo new content education/courses.ru.md
 
 ### Шорткоды для текста
 
-| Шорткод | Что делает |
-|---|---|
-| `{{< lead >}}Текст{{< /lead >}}` | крупный вводный абзац с акцентной полосой |
-| `{{< button href="/contacts" >}}Написать{{< /button >}}` | кнопка; `style="outline"` — контурная |
-| `{{< gallery match="gallery/*" >}}` | галерея |
-| `{{< figure src="x.jpg" caption="…" >}}` | встроенный шорткод Hugo |
+Синтаксис и примеры — в [разделе 12](#12-шорткоды). Кратко: `lead`, `button`, `gallery`, `schedule`, `collapse`, плюс встроенный Hugo `figure`.
 
 ---
 
@@ -386,7 +382,7 @@ Hover-эффекты задаются обычными классами Tailwind
 
 ### Логотип, контакты, соцсети
 
-- Логотип: `params.site_logo = 'images/logo.svg'` (файл в `static/images/`).
+- Логотип: `params.site_logo = 'images/logo/logo.svg'` (файл в `static/images/logo/`).
 - Название, адрес, телефон, email задаются для каждого языка в `[languages.<lang>.params]`.
 - Соцсети: `[params.ananke.social.follow] networks = [...]` и `[params.ananke.social.<сеть>] username = '…'`.
   Список поддерживаемых сетей: `themes/ananke/config/_default/params.toml`.
@@ -421,3 +417,71 @@ Hover-эффекты задаются обычными классами Tailwind
 | Новый класс Tailwind не применился | перезапустите `hugo server` (класс попадает в `hugo_stats.json` при сборке) |
 | Картинка не найдена | файл должен лежать в папке страницы (page bundle) или в `assets/` |
 | На GitHub Pages нет стилей / битые ссылки | где-то ссылка начинается с `/`; используйте `relURL`/`.RelPermalink` |
+
+---
+
+## 12. Шорткоды (Beta)
+
+Шорткоды вставляются в Markdown. Проектные лежат в `layouts/_shortcodes/`.
+Внутренние ссылки в `button` пишите как путь страницы (`/contacts`), не как адрес с доменом.
+
+### Вводный абзац — `lead`
+
+```markdown
+{{< lead >}}Кафедра готовит специалистов по прикладной математике.{{< /lead >}}
+```
+
+### Кнопка — `button`
+
+```markdown
+{{< button href="/education/master" >}}Подробнее{{< /button >}}
+{{< button href="https://example.org" style="outline" >}}Сайт{{< /button >}}
+```
+
+`href`, который начинается с `/`, ищется как страница текущего языка. `style="outline"` — контурная кнопка.
+
+### Галерея — `gallery`
+
+Картинки лежат в папке страницы (page bundle). Обложка (`cover` / `feature` в имени) в галерею не попадает.
+
+```markdown
+{{< gallery match="gallery/*" >}}
+{{< gallery match="gallery/*" cols="2" >}}
+{{< gallery >}}
+```
+
+`cols` — 2, 3 или 4 колонки (по умолчанию 3). Без `match` берутся все картинки папки, кроме обложки.
+
+### Расписание из CSV — `schedule`
+
+Положите CSV в ту же папку, что и страница, первая строка — заголовки колонок:
+
+```markdown
+{{< schedule "timetable.csv" >}}
+```
+
+Ячейки можно писать в Markdown (`**важно**`, ссылки). Если файла нет, на странице появится сообщение об ошибке.
+
+### Сворачиваемый блок — `collapse`
+
+Заголовок с символом `>` слева: свёрнут — смотрит вправо, развёрнут — вниз. Клик по заголовку открывает и закрывает текст с анимацией.
+
+```markdown
+{{< collapse header="История" >}}
+Текст, списки, картинки — обычный Markdown.
+{{< /collapse >}}
+
+{{< collapse header="Подробности" open="false" >}}
+Этот блок сразу свёрнут.
+{{< /collapse >}}
+```
+
+По умолчанию блок открыт. `open="false"` (или `"0"`) — стартует свёрнутым.
+
+Пока поддерживает только сырой текст, таблицы, картинки и прочие шорткоды вставить нельзя.
+
+### Подпись к картинке — `figure` (встроен в Hugo)
+
+```markdown
+{{< figure src="scheme.jpg" caption="Схема установки" >}}
+```

@@ -1,0 +1,29 @@
+{{- /*
+  Сворачиваемый блок с заголовком (как секция в Википедии).
+  Слева от заголовка символ ">", в открытом состоянии повёрнут вниз.
+
+    {{< collapse header="История" >}}
+    Текст…
+    {{< /collapse >}}
+
+    {{< collapse header="Подробности" open="false" >}}
+    Изначально свёрнут.
+    {{< /collapse >}}
+*/ -}}
+{{- $header := .Get "header" | default "" -}}
+{{- $open := true -}}
+{{- with .Get "open" -}}
+  {{- if or (eq . "false") (eq . "0") -}}{{- $open = false -}}{{- end -}}
+{{- end -}}
+{{- $id := printf "collapse-%d" .Ordinal -}}
+<details class="collapse-block my-6{{ if $open }} is-open{{ end }}" data-collapse{{ if $open }} open{{ end }}>
+  <summary class="collapse-header flex cursor-pointer list-none items-center gap-2 py-2 font-serif text-xl text-brand select-none" aria-expanded="{{ cond $open "true" "false" }}" aria-controls="{{ $id }}" aria-label="{{ i18n "collapseToggle" }}">
+    <span class="collapse-arrow inline-block font-sans text-base leading-none text-accent" aria-hidden="true">&gt;</span>
+    <span>{{ $header }}</span>
+  </summary>
+  <div id="{{ $id }}" class="collapse-panel" role="region">
+    <div class="collapse-inner">
+      {{ .Inner | .Page.RenderString }}
+    </div>
+  </div>
+</details>

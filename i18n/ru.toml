@@ -38,6 +38,7 @@ prev = "Назад"
 next = "Вперёд"
 by = "Автор:"
 notFound = "Страница не найдена"
+collapseToggle = "Свернуть или развернуть раздел"
 
 [readingTime]
 one = "{{ .Count }} минута чтения"

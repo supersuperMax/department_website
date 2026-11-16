@@ -8,7 +8,7 @@ description = 'Кафедра Теории пластичности Москов
   title = 'Кафедра Теории пластичности'
   text = 'мехмат МГУ им. М. В. Ломоносова'
   link = '/about'
-  link_text = 'О кафедре'
+  link_text = 'О нас'
 [[hero]]
   image = 'images/hero/rjcm-1-Moscow.jpg'
   title = 'Сотрудничество с Китаем'

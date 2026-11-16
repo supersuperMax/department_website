@@ -125,6 +125,33 @@
 @keyframes fade-out-vt { to { opacity: 0; } }
 @keyframes fade-in-vt { from { opacity: 0; } }
 
+/* Сворачиваемый блок (шорткод collapse): ">" слева, высота панели */
+.collapse-block > summary { list-style: none; }
+.collapse-block > summary::-webkit-details-marker { display: none; }
+.collapse-arrow {
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: transform 0.35s ease;
+}
+.collapse-block.is-open > summary > .collapse-arrow,
+.collapse-block[open] > summary > .collapse-arrow { transform: rotate(90deg); }
+.js-anim .collapse-block:not(.is-open) > summary > .collapse-arrow { transform: rotate(0deg); }
+.collapse-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+.collapse-block[open] > .collapse-panel { grid-template-rows: 1fr; }
+.js-anim .collapse-block:not(.is-open) > .collapse-panel { grid-template-rows: 0fr; }
+.js-anim .collapse-block.is-open > .collapse-panel { grid-template-rows: 1fr; }
+.collapse-inner { min-height: 0; overflow: hidden; }
+/* Без display:none закрытый details можно анимировать */
+.collapse-block > .collapse-panel { display: grid; }
+.collapse-block::details-content {
+  display: block;
+  content-visibility: visible;
+}
+
 /* Контент статей: typography-плагин + немного правок */
 .prose img { @apply rounded-lg shadow-md; }
 .prose figure figcaption { @apply text-center text-sm text-neutral-500; }

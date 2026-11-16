@@ -109,7 +109,7 @@ defaultContentLanguageInSubdir = false
   [[languages.ru.menus.main]]
     parent = 'education'
     name = 'Расписание'
-    pageRef = '/education/scedule'
+    pageRef = '/education/schedule'
     weight = 1
   [[languages.ru.menus.main]]
     parent = 'education'
@@ -261,8 +261,8 @@ defaultContentLanguageInSubdir = false
 # ---------------------------------------------------------- Параметры --------
 [params]
   mainSections = ['news']
-  # Логотип (путь от static/ или assets/). Пусто — выводится текстовое название.
-  site_logo = ''
+  # Логотип (путь от static/). Пусто — выводится текстовое название.
+  site_logo = 'images/logo/logo.svg'
   university_url = 'https://www.msu.ru'
   # Строка «© <год> <университет>» в подвале. Скрыта, пока сайт в разработке.
   show_copyright = false

@@ -38,6 +38,7 @@ prev = "Previous"
 next = "Next"
 by = "By"
 notFound = "Page not found"
+collapseToggle = "Expand or collapse section"
 
 [readingTime]
 one = "{{ .Count }} min read"

@@ -1,6 +1,6 @@
 /*
  * Поведение сайта: анимации появления, шапка, мега-меню, мобильное меню,
- * hero-слайдер, счётчики. Без зависимостей; собирается Hugo через js.Build
+ * hero-слайдер, счётчики, сворачиваемые блоки. Без зависимостей; собирается Hugo через js.Build
  * (layouts/_partials/head-additions.html) и подключается с defer.
  *
  * Настройки приходят из data-атрибутов <html> (см. layouts/baseof.html),
@@ -185,6 +185,53 @@ function initCounters() {
   counters.forEach((c) => io.observe(c));
 }
 
+/* ------------------------------------------- Сворачиваемые блоки -------- */
+function initCollapse() {
+  const blocks = document.querySelectorAll("[data-collapse]");
+  if (!blocks.length) return;
+
+  const sync = (el) => {
+    el.classList.toggle("is-open", el.open);
+    el.querySelector("summary")?.setAttribute("aria-expanded", el.open ? "true" : "false");
+  };
+
+  blocks.forEach((el) => {
+    sync(el);
+    if (!animationsOn) return;
+
+    const summary = el.querySelector("summary");
+    const panel = el.querySelector(".collapse-panel");
+    if (!summary || !panel) return;
+
+    summary.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (el.open) {
+        el.classList.remove("is-open");
+        summary.setAttribute("aria-expanded", "false");
+        let finished = false;
+        const close = () => {
+          if (finished) return;
+          finished = true;
+          panel.removeEventListener("transitionend", onEnd);
+          el.open = false;
+        };
+        const onEnd = (e) => {
+          if (e.target !== panel) return;
+          close();
+        };
+        panel.addEventListener("transitionend", onEnd);
+        window.setTimeout(close, 400);
+      } else {
+        el.open = true;
+        requestAnimationFrame(() => {
+          el.classList.add("is-open");
+          summary.setAttribute("aria-expanded", "true");
+        });
+      }
+    });
+  });
+}
+
 function init() {
   initReveal();
   initHeader();
@@ -192,6 +239,7 @@ function init() {
   initMobileNav();
   initHero();
   initCounters();
+  initCollapse();
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

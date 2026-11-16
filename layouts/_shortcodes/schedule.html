@@ -2,13 +2,13 @@
 {{ $csv := .Page.Resources.GetMatch $file }}
 
 {{ if $csv }}
-  {{ $data := $csv | transform.Unmarshal (dict "delimiter" ",") }}
-  <div class="overflow-x-auto my-8 rounded-xl shadow-sm ring-1 ring-black/5">
+  {{ $data := $csv | transform.Unmarshal (dict "delimiter" ";") }}
+  <div class="overflow-x-auto my-8 rounded-xl shadow-sm">
     <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-brand text-white">
+      <thead class="bg-gray-50">
         <tr>
           {{ range index $data 0 }}
-            <th scope="col" class="px-4 py-3 text-left text-sm font-semibold border-x border-white/20">{{ . }}</th>
+            <th scope="col" class="px-4 py-3 text-center text-sm font-semibold border-x border-white/20">{{ . }}</th>
           {{ end }}
         </tr>
       </thead>
