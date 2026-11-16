@@ -37,19 +37,19 @@ defaultContentLanguageInSubdir = false
       phone = '+7 (495) 000-00-00'
       date_format = '2 January 2006'
 
-  [languages.en]
-    locale = 'en-US'
-    label = 'English'
-    weight = 2
-    title = 'Department of … MSU'
-    [languages.en.params]
-      description = 'Department of … at Lomonosov Moscow State University'
-      department_short = 'Department of …'
-      university = 'Lomonosov Moscow State University'
-      address = '1 Leninskie Gory, Moscow, 119991, Russia'
-      email = 'info@example.msu.ru'
-      phone = '+7 (495) 000-00-00'
-      date_format = 'January 2, 2006'
+#  [languages.en]
+#    locale = 'en-US'
+#    label = 'English'
+#    weight = 2
+#    title = 'Department of … MSU'
+#    [languages.en.params]
+#      description = 'Department of … at Lomonosov Moscow State University'
+#      department_short = 'Department of …'
+#      university = 'Lomonosov Moscow State University'
+#      address = '1 Leninskie Gory, Moscow, 119991, Russia'
+#      email = 'info@example.msu.ru'
+#      phone = '+7 (495) 000-00-00'
+#      date_format = 'January 2, 2006'
 
   # --- Шаблон для новых языков: раскомментируйте, добавьте файлы *.zh.md / *.de.md рядом
   #     с существующими (index.zh.md, _index.zh.md) и создайте i18n/<lang>.toml
@@ -161,100 +161,6 @@ defaultContentLanguageInSubdir = false
 #    weight = 5
   [[languages.ru.menus.footer]]
     name = 'Мероприятия'
-    pageRef = '/events'
-    weight = 6
-
-[languages.en.menus]
-  [[languages.en.menus.main]]
-    identifier = 'about'
-    name = 'About'
-    pageRef = '/about'
-    weight = 10
-  [[languages.en.menus.main]]
-    parent = 'about'
-    name = 'Overview'
-    pageRef = '/about'
-    weight = 1
-  [[languages.en.menus.main]]
-    parent = 'about'
-    name = 'History'
-    pageRef = '/about/history'
-    weight = 2
-  [[languages.en.menus.main]]
-    parent = 'about'
-    name = 'Contacts'
-    pageRef = '/contacts'
-    weight = 3
-
-  [[languages.en.menus.main]]
-    identifier = 'education'
-    name = 'Education'
-    pageRef = '/education'
-    weight = 20
-  [[languages.en.menus.main]]
-    parent = 'education'
-    name = 'Bachelor'
-    pageRef = '/education/bachelor'
-    weight = 1
-  [[languages.en.menus.main]]
-    parent = 'education'
-    name = 'Master'
-    pageRef = '/education/master'
-    weight = 2
-  [[languages.en.menus.main]]
-    parent = 'education'
-    name = 'PhD'
-    pageRef = '/education/phd'
-    weight = 3
-
-  [[languages.en.menus.main]]
-    identifier = 'research'
-    name = 'Research'
-    pageRef = '/research'
-    weight = 30
-  [[languages.en.menus.main]]
-    identifier = 'people'
-    name = 'People'
-    pageRef = '/people'
-    weight = 40
-  [[languages.en.menus.main]]
-    identifier = 'news'
-    name = 'News'
-    pageRef = '/news'
-    weight = 50
-  [[languages.en.menus.main]]
-    identifier = 'events'
-    name = 'Events'
-    pageRef = '/events'
-    weight = 60
-  [[languages.en.menus.main]]
-    identifier = 'contacts'
-    name = 'Contacts'
-    pageRef = '/contacts'
-    weight = 70
-
-  [[languages.en.menus.footer]]
-    name = 'About'
-    pageRef = '/about'
-    weight = 1
-  [[languages.en.menus.footer]]
-    name = 'Education'
-    pageRef = '/education'
-    weight = 2
-  [[languages.en.menus.footer]]
-    name = 'Research'
-    pageRef = '/research'
-    weight = 3
-  [[languages.en.menus.footer]]
-    name = 'People'
-    pageRef = '/people'
-    weight = 4
-  [[languages.en.menus.footer]]
-    name = 'News'
-    pageRef = '/news'
-    weight = 5
-  [[languages.en.menus.footer]]
-    name = 'Events'
     pageRef = '/events'
     weight = 6
 

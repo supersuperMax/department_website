@@ -47,7 +47,7 @@ many = "{{ .Count }} минут чтения"
 other = "{{ .Count }} минут чтения"
 
 [istina]
-other = "Истина"
+other = "ссылка на Истину"
 
 [read_more]
 other = "Подробнее"
